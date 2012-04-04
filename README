@@ -1,16 +1,19 @@
 ``inspyred`` -- A framework for creating bio-inspired computational intelligence algorithms in Python.
 ------------------------------------------------------------------------------------------------------
 
-inspyred is a free, open source framework for creating biologically-inspired computational
-intelligence algorithms in Python, including evolutionary computation, swarm intelligence,
-and immunocomputing. Additionally, inspyred provides easy-to-use canonical versions of many
-bio-inspired algorithms for users who don't need much customization.
+inspyred is a free, open source framework for creating biologically-inspired 
+computational intelligence algorithms in Python, including evolutionary 
+computation, swarm intelligence, and immunocomputing. Additionally, inspyred 
+provides easy-to-use canonical versions of many bio-inspired algorithms for 
+users who don't need much customization.
 
 
 Example
 =======
 
-The following example illustrates the basics of the ECsPy package. In this example, candidate solutions are 10-bit binary strings whose decimal values should be maximized::
+The following example illustrates the basics of the ECsPy package. In this 
+example, candidate solutions are 10-bit binary strings whose decimal values 
+should be maximized::
 
    import random 
    import time 
