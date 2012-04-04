@@ -62,7 +62,7 @@ options(
           'Topic :: Scientific/Engineering :: Artificial Intelligence'
           ],
         
-        packages = [PROJECT, '%s.ec' % PROJECT, '%s.ec.variators' % PROJECT, '%s.swarm' % PROJECT, '%s.immune' % PROJECT],
+        packages = [PROJECT, '%s.ec' % PROJECT, '%s.ec.variators' % PROJECT, '%s.swarm' % PROJECT],
         package_data=PACKAGE_DATA,
     ),
     
