@@ -82,7 +82,7 @@ Getting Help
 ============
 
 Any questions about the library and its use can be posted to the inspyred Google group at
-https://groups.google.com/forum/#!forum/inspyredhelp. If a forum posting is not appropriate or desired,
+https://groups.google.com/forum/#!forum/inspyred. If a forum posting is not appropriate or desired,
 questions can also be emailed directly to aaron.lee.garrett@gmail.com. Feedback is always appreciated.
 Please let us know how you're using the library and any ideas you might have for enhancements.
 
