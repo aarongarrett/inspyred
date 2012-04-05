@@ -25,7 +25,7 @@ VERSION = '1.0'
 os.environ['VERSION'] = VERSION
 
 # Read the long description to give to setup
-README = path('README').text()
+README = path('README.rst').text()
 
 # Scan the input for package information
 # to grab any data files (text, images, etc.) 
