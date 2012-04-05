@@ -31,7 +31,7 @@ class EDA_Test(unittest.TestCase):
     def test(self):
         eda = examples.standard.eda_example.main(prng=prng)
         best = max(eda.population)
-        assert best.fitness < 1.03
+        assert best.fitness < 2.5
 
 class ES_Test(unittest.TestCase):
     def test(self):

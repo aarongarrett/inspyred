@@ -66,6 +66,9 @@ class MigratorTests(unittest.TestCase):
         migrants = inspyred.ec.migrators.default_migration(self.prng, list(self.population), {})
         assert migrants == self.population
     
+    # Multiprocessing migration test may fail simply due to randomness of the migration.
+    # It is recommended to run the test multiple times to make sure that it consistently
+    # fails before spending time looking for errors.
     def test_multiprocessing_migration(self):
         queue = multiprocessing.Queue()
         migrator = inspyred.ec.migrators.MultiprocessingMigrator()

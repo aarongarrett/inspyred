@@ -40,7 +40,7 @@ import multiprocessing
 try:
     import Queue
 except ImportError:
-    import queue
+    import queue as Queue
 
 
 def default_migration(random, population, args):

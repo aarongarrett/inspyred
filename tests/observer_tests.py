@@ -23,8 +23,8 @@ def test_set_up(generator, evaluator):
     population = [inspyred.ec.Individual(candidate=c) for c in candidates]
     for i, f in zip(population, fitnesses):
         i.fitness = f
-    parents = population[:pop_size/2]
-    offspring = population[pop_size/2:]
+    parents = population[:pop_size//2]
+    offspring = population[pop_size//2:]
     return (prng, candidates, fitnesses, population, parents, offspring)
 
 class ObserverTests(unittest.TestCase):

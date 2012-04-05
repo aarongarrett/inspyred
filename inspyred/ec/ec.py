@@ -246,11 +246,12 @@ class Individual(object):
         return other < self or not self < other
         
     def __eq__(self, other):
-        return ((self._candidate, self.fitness, self.birthdate, self.maximize) == 
-                (other._candidate, other.fitness, other.birthdate, other.maximize))
+        return ((self._candidate, self.fitness, self.maximize) == 
+                (other._candidate, other.fitness, other.maximize))
                 
     def __ne__(self, other):
         return not (self == other)
+        
 
 
 class EvolutionaryComputation(object):

@@ -227,8 +227,10 @@ class Griewank(Benchmark):
     def evaluator(self, candidates, args):
         fitness = []
         for c in candidates:
-            fitness.append(1.0 / 4000.0 * sum([x**2 for x in c]) - 
-                           reduce(lambda x, y: x*y, [math.cos(x / math.sqrt(i+1)) for i, x in enumerate(c)]) + 1)
+            prod = 1
+            for i, x in enumerate(c):
+                prod *= math.cos(x / math.sqrt(i+1))
+            fitness.append(1.0 / 4000.0 * sum([x**2 for x in c]) - prod + 1)
         return fitness
 
 class Rastrigin(Benchmark):

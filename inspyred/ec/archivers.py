@@ -216,7 +216,15 @@ def adaptive_grid_archiver(random, population, archive, args):
                             removal_set.append(a)
                     # Otherwise, the individual is nondominated against this archive member.
                     
-                new_archive = list(set(new_archive) - set(removal_set))
+                # We can't use set difference because Individual objects are not hashable.
+                # We'd like to say...
+                #     new_archive = list(set(new_archive) - set(removal_set))
+                # So this code gets that same result without using sets.
+                temp_archive = []
+                for ind in new_archive:
+                    if ind not in removal_set:
+                        temp_archive.append(ind)
+                new_archive = temp_archive
                 
                 if not join and nondominated:
                     if len(new_archive) == max_archive_size:
