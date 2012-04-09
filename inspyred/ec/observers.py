@@ -340,9 +340,9 @@ def plot_observer(population, num_generations, num_evaluations, args):
     entry called 'plot_data'.
     
     If this observer is used, the calling script should also import
-    the pylab library and should end the script with 
+    the pylab library and should end the script with::
     
-    pylab.show()
+        pylab.show()
     
     Otherwise, the program may generate a runtime error.
     
