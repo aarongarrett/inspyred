@@ -1,13 +1,19 @@
-from inspyred import ec
-from inspyred.ec import terminators
+import collections
+import inspyred
 
-class MicroEC(ec.EvolutionaryComputation):
+class MicroEC(inspyred.ec.EvolutionaryComputation):
     def __init__(self, random):
-        ec.EvolutionaryComputation.__init__(self, random)
+        inspyred.ec.EvolutionaryComputation.__init__(self, random)
         
-    def evolve(self, generator, evaluator, pop_size=10, seeds=[], maximize=True, bounder=ec.Bounder(), **args):
+    def evolve(self, generator, evaluator, pop_size=10, seeds=None, maximize=True, bounder=None, **args):
         self._kwargs = args
         self._kwargs['_ec'] = self
+        
+        if seeds is None:
+            seeds = []
+        if bounder is None:
+            bounder = inspyred.ec.Bounder()
+        
         self.termination_cause = None
         self.generator = generator
         self.evaluator = evaluator
@@ -15,22 +21,24 @@ class MicroEC(ec.EvolutionaryComputation):
         self.maximize = maximize
         self.population = []
         self.archive = []
-        self.num_generations = 0
-        self.num_evaluations = 0
         microseeds = seeds
-        args.setdefault('min_diversity', 0.05)
-        while not self._should_terminate(self.population, self.num_generations, self.num_evaluations):
-            microec = ec.EvolutionaryComputation(self._random)
+        
+        while not self._should_terminate(list(self.population), self.num_generations, self.num_evaluations):
+            microec = inspyred.ec.EvolutionaryComputation(self._random)
             microec.selector = self.selector
             microec.variator = self.variator
             microec.replacer = self.replacer
-            microec.terminator = terminators.diversity_termination
+            microec.observer = self.observer
+            microec.terminator = inspyred.ec.terminators.evaluation_termination
+            maxevals = args['max_evaluations']
+            args['max_evaluations'] = args['micro_evaluations']
             result = microec.evolve(generator=generator, evaluator=evaluator, 
                                     pop_size=pop_size, seeds=microseeds, 
                                     maximize=maximize, **args)
+            self.population = list(result)
+            args['max_evaluations'] = maxevals
             result.sort(reverse=True)
             microseeds = [result[0].candidate]
-            self.population = list(result)
             self.num_evaluations += microec.num_evaluations
 
             # Migrate individuals.
@@ -39,33 +47,24 @@ class MicroEC(ec.EvolutionaryComputation):
                                             args=self._kwargs)
             
             # Archive individuals.
-            pop_copy = list(self.population)
-            arc_copy = list(self.archive)
-            self.archive = self.archiver(random=self._random, archive=arc_copy, 
-                                         population=pop_copy, args=self._kwargs)
+            self.archive = self.archiver(random=self._random, archive=self.archive, 
+                                         population=list(self.population), args=self._kwargs)
             
             self.num_generations += microec.num_generations
-            if isinstance(self.observer, (list, tuple)):
+            if isinstance(self.observer, collections.Iterable):
                 for obs in self.observer:
-                    obs(population=self.population, num_generations=self.num_generations, 
+                    obs(population=list(self.population), num_generations=self.num_generations, 
                         num_evaluations=self.num_evaluations, args=self._kwargs)
             else:
-                self.observer(population=self.population, num_generations=self.num_generations, 
+                self.observer(population=list(self.population), num_generations=self.num_generations, 
                               num_evaluations=self.num_evaluations, args=self._kwargs)
         return self.population
-    
+
+
 if __name__ == '__main__':
     import random
     import math
     import time
-    from inspyred import ec
-    from inspyred.ec import observers
-    from inspyred.ec import terminators
-    from inspyred.ec import selectors
-    from inspyred.ec import replacers
-    from inspyred.ec import variators
-    from inspyred.ec import archivers
-
 
     def rastrigin_generator(random, args):
         return [random.uniform(-5.12, 5.12) for _ in range(2)]
@@ -79,18 +78,19 @@ if __name__ == '__main__':
     prng = random.Random()
     prng.seed(time.time())
     micro = MicroEC(prng)
-    micro.selector = selectors.tournament_selection
-    micro.replacer = replacers.steady_state_replacement
-    micro.variator = [variators.uniform_crossover, variators.gaussian_mutation]
-    micro.archiver = archivers.best_archiver
-    micro.observer = observers.stats_observer
-    micro.terminator = terminators.evaluation_termination
+    micro.selector = inspyred.ec.selectors.tournament_selection
+    micro.replacer = inspyred.ec.replacers.steady_state_replacement
+    micro.variator = [inspyred.ec.variators.uniform_crossover, inspyred.ec.variators.gaussian_mutation]
+    micro.archiver = inspyred.ec.archivers.best_archiver
+    micro.observer = inspyred.ec.observers.stats_observer
+    micro.terminator = inspyred.ec.terminators.evaluation_termination
     final_pop = micro.evolve(rastrigin_generator, 
                              rastrigin_evaluator, 
                              pop_size=10, 
                              maximize=False, 
-                             bounder=ec.Bounder(-5.12, 5.12),
-                             max_evaluations=3000, 
+                             bounder=inspyred.ec.Bounder(-5.12, 5.12),
+                             max_evaluations=3000,
+                             micro_evaluations=300,
                              num_selected=2, 
                              gaussian_stdev=0.1)
                              
