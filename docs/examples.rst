@@ -304,6 +304,21 @@ in the example below.
 
 .. literalinclude:: ../examples/advanced/parallel_evaluation_pp_example.py
 
+-------------
+Island Models
+-------------
+
+Along with parallel evaluation of the fitness, it is also possible to create
+different populations that evolve independently but are capable of sharing
+solutions among themselves. Such approaches are known as "island models" and
+can be accomplished within inspyred by making use of the migrator callback.
+The following example illustrates a very simple two-island model using the
+``inspyred.ec.migrators.MultiprocessingMigrator`` migrator. Remember that
+custom migrators can easily be constructed for more specific needs.
+[:download:`download <../examples/advanced/islands_example.py>`]
+
+.. literalinclude:: ../examples/advanced/islands_example.py
+
 -----------------------
 Replacement via Niching
 -----------------------
