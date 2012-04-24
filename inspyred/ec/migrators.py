@@ -72,6 +72,12 @@ class MultiprocessingMigrator(object):
     use different evaluation functions and you need to be able to compare 
     "apples with apples," so to speak.
     
+    The migration takes the current individual *I* out of the queue, if
+    one exists. It then randomly chooses an individual *E* from the population
+    to insert into the queue. Finally, if *I* exists, it replaces *E* in the
+    population (re-evaluating fitness if necessary). Otherwise, *E* remains in 
+    the population and also exists in the queue as a migrant.
+    
     Optional keyword arguments in args:
     
     - *evaluate_migrant* -- should new migrants be evaluated before 
