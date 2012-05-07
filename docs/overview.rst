@@ -35,7 +35,7 @@ For instance, the inspyred library views evolutionary computations as being comp
   * A selector that determines which individuals should become parents
   * A variator that determines how offspring are created from existing individuals
   * A replacer that determines which individuals should survive into the next generation
-  * A migrator that defines how solutions are transferred among differnt populations
+  * A migrator that defines how solutions are transferred among different populations
   * An archiver that defines how existing solutions are stored outside of the current population
 
 Each of these components is specified by a function (or function-like) callback that the user can supply. The general flow of the ``evolve`` method in inspyred is as follows, where user-supplied callback functions are in ALL-CAPS:
