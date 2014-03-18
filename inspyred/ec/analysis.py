@@ -83,7 +83,7 @@ def fitness_statistics(population):
             'median': med_fit, 'std': std_fit}
             
 
-def generation_plot(filename, errorbars=True):
+def generation_plot(file_handle, errorbars=True):
     """Plot the results of the algorithm using generation statistics.
     
     This function creates a plot of the generation fitness statistics 
@@ -102,7 +102,7 @@ def generation_plot(filename, errorbars=True):
     
     Arguments:
     
-    - *filename* -- the name of the statistics file produced by the file_observer 
+    - *file_handle* -- the file object of the statistics file produced by the file_observer
     - *errorbars* -- Boolean value stating whether standard error bars should 
       be drawn (default True)
 
@@ -117,7 +117,8 @@ def generation_plot(filename, errorbars=True):
     median = []
     average = []
     stdev = []
-    reader = csv.reader(open(filename))
+
+    reader = csv.reader(file_handle)
     for row in reader:
         generation.append(int(row[0]))
         psize.append(int(row[1]))
@@ -151,7 +152,7 @@ def generation_plot(filename, errorbars=True):
     pylab.show()    
 
     
-def allele_plot(filename, normalize=False, alleles=None, generations=None):
+def allele_plot(file_handle, normalize=False, alleles=None, generations=None):
     """Plot the alleles from each generation from the individuals file.
     
     This function creates a plot of the individual allele values as they
@@ -174,7 +175,7 @@ def allele_plot(filename, normalize=False, alleles=None, generations=None):
     
     Arguments:
     
-    - *filename* -- the name of the individuals file produced by the file_observer 
+    - *file_handle* -- the file object of the individuals file produced by the file_observer
     - *normalize* -- Boolean value stating whether allele values should be
       normalized before plotting (default False)
     - *alleles* -- a list of allele index values that should be plotted
@@ -189,7 +190,8 @@ def allele_plot(filename, normalize=False, alleles=None, generations=None):
     import pylab
     
     generation_data = []
-    reader = csv.reader(open(filename))
+
+    reader = csv.reader(file_handle)
     for row in reader:
         g = int(row[0])
         row[3] = row[3].replace('[', '')
