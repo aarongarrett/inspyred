@@ -33,7 +33,7 @@ except ImportError:
 
 
 try:
-    import collections.OrderedDict as OrderedDict
+    from collections import OrderedDict as OrderedDict
 except ImportError:
     # http://code.activestate.com/recipes/576693/ (r9)
     # Backport of OrderedDict() class that runs on Python 2.4, 2.5, 2.6, 2.7 and pypy.

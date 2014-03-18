@@ -600,7 +600,7 @@ class ES(EvolutionaryComputation):
             cand = candidate[:n]
             strat = candidate[n:]
             for i, s in enumerate(strat):
-                strat[i] = s + math.exp(tau_prime * random.gauss(0, 1) + tau * random.gauss(0, 1))
+                strat[i] = s * math.exp(tau_prime * random.gauss(0, 1) + tau * random.gauss(0, 1))
                 strat[i] = max(strat[i], epsilon)
             for i, (c, s) in enumerate(zip(cand, strat)):
                 cand[i] = c + random.gauss(0, s)
