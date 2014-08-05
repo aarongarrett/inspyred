@@ -63,5 +63,5 @@ http://www.opensource.org/licenses/gpl-3.0.html.
 Resources
 =========
 
-  * Homepage: http://inspyred.github.com
+  * Homepage: http://aarongarrett.github.io/inspyred
   * Email: aaron.lee.garrett@gmail.com
