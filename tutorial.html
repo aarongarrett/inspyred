@@ -1,0 +1,618 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This chapter presents three examples to which inspyred can be applied.</p>
+<div class="section" id="the-rastrigin-function">
+<h2>The Rastrigin Function<a class="headerlink" href="#the-rastrigin-function" title="Permalink to this headline">¶</a></h2>
+<p>The Rastrigin function is a well-known benchmark in the optimization literature. It is defined as follows:</p>
+<p>Minimize</p>
+<div class="math">
+\[10n + \sum_{i=1}^n\left((x_i - 1)^2 - 10\cos(2\pi(x_i - 1))\right)\]</div>
+<p>for <span class="math">\(x_i \in [-5.12, 5.12]\)</span>.</p>
+<p>Since this problem is defined on a set of continuous-valued variables, using an evolution strategy as our optimizer seems appropriate. However, as always, we&#8217;ll need to first create the <em>generator</em> and the <em>evaluator</em> for the candidate solutions. First, the generator...</p>
+<div class="section" id="the-generator">
+<h3>The Generator<a class="headerlink" href="#the-generator" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">cos</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">inspyred</span> <span class="kn">import</span> <span class="n">ec</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">terminators</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">generate_rastrigin</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_inputs&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>First, we import all the necessary libraries. <tt class="docutils literal"><span class="pre">random</span></tt> and <tt class="docutils literal"><span class="pre">time</span></tt> are needed for the random number generation; <tt class="docutils literal"><span class="pre">math</span></tt> is needed for the evaluation function; and <tt class="docutils literal"><span class="pre">inspyred</span></tt> is, of course, needed for the evolutionary computation.</p>
+<p>This function must take the random number generator object along with the keyword arguments. Notice that we can use the <tt class="docutils literal"><span class="pre">args</span></tt> variable to pass anything we like to our functions. There is nothing special about the <tt class="docutils literal"><span class="pre">num_inputs</span></tt> key. But, as we&#8217;ll see, we can pass in that value as a keyword argument to the <tt class="docutils literal"><span class="pre">evolve</span></tt> method of our evolution strategy.</p>
+<p>This code is pretty straightforward. We&#8217;re simply generating a list of <tt class="docutils literal"><span class="pre">num_inputs</span></tt> uniform random values between -5.12 and 5.12. If <tt class="docutils literal"><span class="pre">num_inputs</span></tt> has not been specified, then we will default to generating 10 values.</p>
+<p>And now we can tackle the evaluator...</p>
+</div>
+<div class="section" id="the-evaluator">
+<h3>The Evaluator<a class="headerlink" href="#the-evaluator" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">evaluate_rastrigin</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cs</span><span class="p">])</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+</pre></div>
+</div>
+<p>This function takes an iterable object containing the candidates along with the keyword arguments. The function should perform the evaluation of each of the candidates and return an iterable object containing each fitness value in the same order as the candidates <a class="footnote-reference" href="#id3" id="id1">[1]</a>. The Rastrigin problem is one of minimization, so we&#8217;ll need to tell the evolution strategy that we are minimizing (by using <tt class="docutils literal"><span class="pre">maximize=False</span></tt> in the call to <tt class="docutils literal"><span class="pre">evolve</span></tt>).</p>
+</div>
+<div class="section" id="the-evolutionary-computation">
+<h3>The Evolutionary Computation<a class="headerlink" href="#the-evolutionary-computation" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have decided upon our generator and evaluator, we can create the EC. In this case since our problem is real-coded, we&#8217;ll choose a evolution strategy (ES) <a class="footnote-reference" href="#id4" id="id2">[2]</a>. The default for an ES is to select the entire population, use each to produce a child via Gaussian mutation, and then use &#8220;plus&#8221; replacement.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rand</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+<span class="n">rand</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()))</span>
+<span class="n">es</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">ES</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+<span class="n">es</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+<span class="n">final_pop</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generate_rastrigin</span><span class="p">,</span>
+                      <span class="n">evaluator</span><span class="o">=</span><span class="n">evaluate_rastrigin</span><span class="p">,</span>
+                      <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                      <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                      <span class="n">bounder</span><span class="o">=</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
+                      <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span>
+                      <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                      <span class="n">num_inputs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c"># Sort and print the best individual, who will be at index 0.</span>
+<span class="n">final_pop</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python"><pre>$ python rastrigin.py
+[1.0591544744884256, -0.06931594194249761, 2.014420132288964, 2.4373871664313254, 0.9287429640850096, 1.4371661116043493] : 3.83332404535</pre>
+</div>
+<p>As can be seen, we first create our random number generator object, seeding it with the current system time. Then we construct our ES, specifying a terminator (that stops after a given number of function evaluations). Finally, we call the <tt class="docutils literal"><span class="pre">evolve</span></tt> method of the ES. To this method, we pass the generator, evaluator, the population size, a flag to denote that we&#8217;re minimizing in this problem (which defaults to <tt class="docutils literal"><span class="pre">maximize=True</span></tt> if unspecified), a bounding function to use for candidate solutions, and a set of keyword arguments that will be needed by one or more of the functions involved. For instance, we pass <tt class="docutils literal"><span class="pre">num_inputs</span></tt> to be used by our generator. Likewise, <tt class="docutils literal"><span class="pre">max_evaluations</span></tt> will be used by our terminator.</p>
+<p>The script outputs the best individual in the final generation, which will be located at index 0 after the final population is sorted. Since the random number generator was seeded with the current time, your particular output will be different when running this script from that presented here. You can <a class="reference download internal" href="_downloads/rastrigin.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The evaluator was designed to evaluate all candidates, rather than a single candidate (with iteration happening inside the evolutionary computation), because this allows more complex evaluation functions that make use of the current set of individuals. Of course, such a function would also rely heavily on the choice of selector, as well. If no such elaborate mechanism is needed, then the decorator <tt class="docutils literal"><span class="pre">&#64;inspyred.ec.evaluators.evaluator</span></tt> can be used on an evaluation function that operates on a single candidate. See <a class="reference internal" href="reference.html"><em>the reference documentation</em></a> for more details.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>We can also certainly create real-coded genetic algorithms, among many other choices for our EC. However, for this discussion we are attempting to use the canonical versions to which most people would be accustomed.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="evolving-polygons">
+<h2>Evolving Polygons<a class="headerlink" href="#evolving-polygons" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will attempt to create a polygon of <em>n</em> vertices that has maximal area. We&#8217;ll also create a custom observer that allows us to display the polygon as it evolves.</p>
+<div class="section" id="id5">
+<h3>The Generator<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+<span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">generate_polygon</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_vertices&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Once again, we import the necessary libraries. In this case, we&#8217;ll also need to tailor elements of the EC, as well as provide graphical output.</p>
+<p>After the libraries have been imported, we define our generator function. It looks for the keyword argument <tt class="docutils literal"><span class="pre">num_vertices</span></tt>, and it creates a list of <tt class="docutils literal"><span class="pre">num_vertices</span></tt> ordered pairs (tuples) where each coordinate is in the range [-1, 1].</p>
+</div>
+<div class="section" id="id6">
+<h3>The Evaluator<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">x0</span><span class="o">*</span><span class="n">y1</span> <span class="o">-</span> <span class="n">x1</span><span class="o">*</span><span class="n">y0</span> <span class="k">for</span> <span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">),</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">))</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">(</span><span class="n">p</span><span class="p">)]))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">evaluate_polygon</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">area</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+</pre></div>
+</div>
+<p>In order to evaluate the polygon, we need to calculate its area. The <tt class="docutils literal"><span class="pre">segments</span></tt> and <tt class="docutils literal"><span class="pre">area</span></tt> functions do this for us. (In case it&#8217;s not clear from the code, the <tt class="docutils literal"><span class="pre">segments</span></tt> function turns a list of coordinate pairs into a list of pairs of adjacent neighbors. For instance, <tt class="docutils literal"><span class="pre">[(1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)]</span></tt> would return <tt class="docutils literal"><span class="pre">[((1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4)),</span> <span class="pre">((3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)),</span> <span class="pre">((5,</span> <span class="pre">6),</span> <span class="pre">(1,</span> <span class="pre">2))]</span></tt>.) Therefore, the <tt class="docutils literal"><span class="pre">evaluate_polygon</span></tt> function simply needs to assign the fitness to be the value returned as the area.</p>
+</div>
+<div class="section" id="the-bounder">
+<h3>The Bounder<a class="headerlink" href="#the-bounder" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">bound_polygon</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidate</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">candidate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">candidate</span>
+<span class="n">bound_polygon</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">bound_polygon</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because our representation is a bit non-standard (a list of tuples), we need to create a bounding function that the EC can use to bound potential candidate solutions. Here, the bounding function is simple enough. It just make sure that each element of each tuple lies in the range [-1, 1]. The <tt class="docutils literal"><span class="pre">lower_bound</span></tt> and <tt class="docutils literal"><span class="pre">upper_bound</span></tt> attributes are added to the function so that the <tt class="docutils literal"><span class="pre">mutate_polygon</span></tt> function can make use of them without being hard-coded. While this is not strictly necessary, it does mimic the behavior of the <tt class="docutils literal"><span class="pre">Bounder</span></tt> callable class provided by inspyred.</p>
+</div>
+<div class="section" id="the-observer">
+<h3>The Observer<a class="headerlink" href="#the-observer" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">polygon_observer</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;canvas&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">Tk</span><span class="p">(),</span> <span class="n">bg</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+        <span class="n">args</span><span class="p">[</span><span class="s">&#39;canvas&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">canvas</span>
+        
+    <span class="c"># Get the best polygon in the population.</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">population</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">candidate</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">100</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="mi">200</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">poly</span><span class="p">]</span>
+    <span class="n">old_polys</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">find_withtag</span><span class="p">(</span><span class="s">&#39;poly&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">old_polys</span><span class="p">:</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">old_rects</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">find_withtag</span><span class="p">(</span><span class="s">&#39;rect&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">old_rects</span><span class="p">:</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">old_verts</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">find_withtag</span><span class="p">(</span><span class="s">&#39;vert&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">old_verts</span><span class="p">:</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        
+    <span class="n">canvas</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">outline</span><span class="o">=</span><span class="s">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="s">&#39;rect&#39;</span><span class="p">)</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">create_polygon</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">outline</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="s">&#39;poly&#39;</span><span class="p">)</span>
+    <span class="n">vert_radius</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">vert_radius</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">vert_radius</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">vert_radius</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">vert_radius</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="s">&#39;vert&#39;</span><span class="p">)</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;{0} evaluations&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_evaluations</span><span class="p">))</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since we are evolving a two-dimensional shape, it makes sense to use a graphical approach to observing the current best polygon during each iteration. The <tt class="docutils literal"><span class="pre">polygon_observer</span></tt> accomplishes this by drawing the best polygon in the population to a Tk canvas. Notice that the canvas is passed in via the keyword arguments parameter <tt class="docutils literal"><span class="pre">args</span></tt>.</p>
+</div>
+<div class="section" id="id7">
+<h3>The Evolutionary Computation<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>For this task, we&#8217;ll create a custom evolutionary computation by selecting the operators to be used. First, we will need to create a custom mutation operator since none of the pre-defined operators deal particularly well with a list of tuples.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mutate_polygon</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">mut_rate</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;mutation_rate&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">bounder</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;_ec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">bounder</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidates</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bounder</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">bounder</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">mut_rate</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span>
+                <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounder</span><span class="p">(</span><span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">candidates</span>
+        
+</pre></div>
+</div>
+<p>Notice that this is essentially a Gaussian mutation on each coordinate of each tuple. Now we can create our custom EC.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rand</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+<span class="n">rand</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()))</span>
+<span class="n">my_ec</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+<span class="n">my_ec</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+<span class="n">my_ec</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> <span class="n">mutate_polygon</span><span class="p">]</span>
+<span class="n">my_ec</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span>
+<span class="n">my_ec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">polygon_observer</span>
+<span class="n">my_ec</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">average_fitness_termination</span><span class="p">]</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+<span class="n">window</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Evolving Polygons&#39;</span><span class="p">)</span>
+<span class="n">can</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">can</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+
+<span class="n">final_pop</span> <span class="o">=</span> <span class="n">my_ec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generate_polygon</span><span class="p">,</span>
+                         <span class="n">evaluator</span><span class="o">=</span><span class="n">evaluate_polygon</span><span class="p">,</span>
+                         <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                         <span class="n">bounder</span><span class="o">=</span><span class="n">bound_polygon</span><span class="p">,</span>
+                         <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                         <span class="n">num_selected</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                         <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                         <span class="n">num_vertices</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                         <span class="n">canvas</span><span class="o">=</span><span class="n">can</span><span class="p">)</span>
+<span class="c"># Sort and print the best individual, who will be at index 0.</span>
+<span class="n">final_pop</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Terminated due to {0}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">my_ec</span><span class="o">.</span><span class="n">termination_cause</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This EC uses tournament selection, uniform crossover, our custom mutation operator, and steady-state replacement. We also set up the custom observer and create the canvas, which is passed into the <tt class="docutils literal"><span class="pre">evolve</span></tt> method as a keyword argument. You can <a class="reference download internal" href="_downloads/polyarea.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
+</div>
+</div>
+<div class="section" id="lunar-explorer">
+<h2>Lunar Explorer<a class="headerlink" href="#lunar-explorer" title="Permalink to this headline">¶</a></h2>
+<p>In this example <a class="footnote-reference" href="#id12" id="id8">[3]</a>, we will evolve the configuration for a space probe designed to travel around the Moon and return to Earth. The space probe is defined by five parameters: its orbital height, mass, boost velocity (both <em>x</em> and <em>y</em> components), and initial <em>y</em> (vertical from Earth) velocity. The physical problem which we are here using optimization to solve is known as &#8220;Gravity Assist&#8221; or &#8220;Gravity Slingshot&#8221; and is used by spacecraft to alter the direction and speed of spacecraft, reducing the need for propellant. It was first propsed by Yuri Kondratyuk and first used by the Soviet space probe Luna 3 in 1959 to take the first pictures of the never-before-seen far side of the moon. The computational power available to the designers of the Luna 3 was much smaller than what is available today. The optimization of the space craft&#8217;s trajectory was therefore a very difficult task. The evaluator presented here makes some simplifying assumptions, but demonstrates the general principle of using evolutionary computation to solve an engineering or scientific task.</p>
+<div class="section" id="id9">
+<h3>The Generator<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">satellite_generator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bounder</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&quot;_ec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">bounder</span>
+    <span class="c"># The constraints are as follows:</span>
+    <span class="c">#             orbital   satellite   boost velocity      initial y</span>
+    <span class="c">#             height    mass        (x,       y)        velocity</span>
+    <span class="k">for</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bounder</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">bounder</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">):</span>
+        <span class="n">chromosome</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">chromosome</span>
+</pre></div>
+</div>
+<p>After the libraries have been imported, we define our generator function. It simply pulls the bounder values for each of the five parameters of the satellite and randomly chooses a value between the minimum and maximum.</p>
+</div>
+<div class="section" id="id10">
+<h3>The Evaluator<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">pairwise</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;s -&gt; (s0,s1), (s1,s2), (s2, s3), ...&quot;&quot;&quot;</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">tee</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    
+</pre></div>
+</div>
+<p>This function breaks a one-dimensional list into a set of overlapping pairs. This is necessary because the trajectory of the satellite is a set of points, and the total distance traveled is calculated by summing the pairwise distances.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">distance_between</span><span class="p">(</span><span class="n">position_a</span><span class="p">,</span> <span class="n">position_b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">position_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">position_b</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">position_a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">position_b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+</pre></div>
+</div>
+<p>This function calculates the Euclidean distance between points.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">gravitational_force</span><span class="p">(</span><span class="n">position_a</span><span class="p">,</span> <span class="n">mass_a</span><span class="p">,</span> <span class="n">position_b</span><span class="p">,</span> <span class="n">mass_b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the gravitational force between the two bodies a and b.&quot;&quot;&quot;</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">position_a</span><span class="p">,</span> <span class="n">position_b</span><span class="p">)</span>
+
+    <span class="c"># Calculate the direction and magnitude of the force.</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">position_a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">position_b</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">position_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">position_b</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">magnitude</span> <span class="o">=</span> <span class="n">G</span> <span class="o">*</span> <span class="n">mass_a</span> <span class="o">*</span> <span class="n">mass_b</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c"># Find the x and y components of the force.</span>
+    <span class="c"># Determine sign based on which one is the larger body.</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">mass_b</span> <span class="o">&gt;</span> <span class="n">mass_a</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">x_force</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">magnitude</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">y_force</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">magnitude</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x_force</span><span class="p">,</span> <span class="n">y_force</span>
+</pre></div>
+</div>
+<p>This function calculates the gravitational force between the two given bodies.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">force_on_satellite</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the total gravitational force acting on the body from the Earth and Moon.&quot;&quot;&quot;</span>
+    <span class="n">earth_grav_force</span> <span class="o">=</span> <span class="n">gravitational_force</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">earth_position</span><span class="p">,</span> <span class="n">earth_mass</span><span class="p">)</span>
+    <span class="n">moon_grav_force</span> <span class="o">=</span> <span class="n">gravitational_force</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">moon_position</span><span class="p">,</span> <span class="n">moon_mass</span><span class="p">)</span>
+    <span class="n">F_x</span> <span class="o">=</span> <span class="n">earth_grav_force</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">moon_grav_force</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">F_y</span> <span class="o">=</span> <span class="n">earth_grav_force</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">moon_grav_force</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">F_x</span><span class="p">,</span> <span class="n">F_y</span>
+</pre></div>
+</div>
+<p>This function calculates the force on the satellite from both the Earth and the Moon.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">acceleration_of_satellite</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the acceleration based on all forces acting upon the body.&quot;&quot;&quot;</span>
+    <span class="n">F_x</span><span class="p">,</span> <span class="n">F_y</span> <span class="o">=</span> <span class="n">force_on_satellite</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F_x</span> <span class="o">/</span> <span class="n">mass</span><span class="p">,</span> <span class="n">F_y</span> <span class="o">/</span> <span class="n">mass</span>
+</pre></div>
+</div>
+<p>This function calculates the acceleration of the satellite due to the forces acting upon it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">moonshot</span><span class="p">(</span><span class="n">orbital_height</span><span class="p">,</span> <span class="n">satellite_mass</span><span class="p">,</span> <span class="n">boost_velocity</span><span class="p">,</span> <span class="n">initial_y_velocity</span><span class="p">,</span> 
+             <span class="n">time_step</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mf">5e4</span><span class="p">,</span> <span class="n">plot_trajectory</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">distance_from_earth_center</span> <span class="o">=</span> <span class="n">orbital_height</span> <span class="o">+</span> <span class="n">earth_radius</span>
+    <span class="n">eqb_velocity</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">G</span> <span class="o">*</span> <span class="n">earth_mass</span> <span class="o">/</span> <span class="n">distance_from_earth_center</span><span class="p">)</span>
+    
+    <span class="c"># Start the simulation.</span>
+    <span class="c"># Keep up with the positions of the satellite as it moves.</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="p">[(</span><span class="n">earth_radius</span> <span class="o">+</span> <span class="n">orbital_height</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)]</span> <span class="c"># The initial position of the satellite.</span>
+    <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">initial_y_velocity</span><span class="p">]</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">min_distance_from_moon</span> <span class="o">=</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">moon_position</span><span class="p">)</span> <span class="o">-</span> <span class="n">moon_radius</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="n">keep_simulating</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">rockets_boosted</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">while</span> <span class="n">keep_simulating</span><span class="p">:</span>
+        <span class="c"># Calculate the acceleration and corresponding change in velocity.</span>
+        <span class="c"># (This is effectively the Forward Euler Algorithm.)</span>
+        <span class="n">acceleration</span> <span class="o">=</span> <span class="n">acceleration_of_satellite</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">satellite_mass</span><span class="p">)</span>
+        <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">acceleration</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">time_step</span>
+        <span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">acceleration</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">time_step</span> 
+
+        <span class="c"># Start the rocket burn:</span>
+        <span class="c"># add a boost in the +x direction of 1m/s</span>
+        <span class="c"># closest point to the moon</span>
+        <span class="k">if</span> <span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">100</span> <span class="ow">and</span> <span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">distance_from_earth_center</span><span class="o">-</span><span class="mi">100</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rockets_boosted</span><span class="p">:</span> 
+            <span class="n">launch_point</span> <span class="o">=</span> <span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">boost_velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">boost_velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rockets_boosted</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="c"># Calculate the new position based on the velocity.</span>
+        <span class="n">position</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">time_step</span><span class="p">,</span> 
+                         <span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">time_step</span><span class="p">))</span>
+        <span class="n">time</span> <span class="o">+=</span> <span class="n">time_step</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">max_iterations</span><span class="p">:</span>
+            <span class="n">keep_simulating</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="n">distance_from_moon_surface</span> <span class="o">=</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">moon_position</span><span class="p">)</span> <span class="o">-</span> <span class="n">moon_radius</span>
+        <span class="n">distance_from_earth_surface</span> <span class="o">=</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">earth_position</span><span class="p">)</span> <span class="o">-</span> <span class="n">earth_radius</span>
+        <span class="k">if</span> <span class="n">distance_from_moon_surface</span> <span class="o">&lt;</span> <span class="n">min_distance_from_moon</span><span class="p">:</span>
+            <span class="n">min_distance_from_moon</span> <span class="o">=</span> <span class="n">distance_from_moon_surface</span>
+            
+        <span class="c"># See if the satellite crashes into the Moon or the Earth, or</span>
+        <span class="c"># if the satellite gets too far away (radio contact is lost).</span>
+        <span class="k">if</span> <span class="n">distance_from_moon_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="mi">100000</span> <span class="c"># penalty of 100,000 km if crash on moon</span>
+            <span class="n">keep_simulating</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="n">distance_from_earth_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">keep_simulating</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">fitness</span> <span class="o">-=</span> <span class="mi">100000</span> <span class="c"># reward of 100,000 km if land on earth</span>
+        <span class="k">elif</span> <span class="n">distance_from_earth_surface</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">earth_position</span><span class="p">,</span> <span class="n">moon_position</span><span class="p">):</span> 
+            <span class="n">keep_simulating</span> <span class="o">=</span> <span class="bp">False</span> <span class="c">#radio contact lost</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c"># Augment the fitness to include the minimum distance (in km) </span>
+    <span class="c"># that the satellite made it to the Moon (lower without crashing is better).</span>
+    <span class="n">fitness</span> <span class="o">+=</span> <span class="n">min_distance_from_moon</span> <span class="o">/</span> <span class="mf">1000.0</span> 
+    
+    <span class="c"># Augment the fitness to include 1% of the total distance</span>
+    <span class="c"># traveled by the probe (in km). This means the probe</span>
+    <span class="c"># should prefer shorter paths.</span>
+    <span class="n">total_distance</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">position</span><span class="p">):</span>
+        <span class="n">total_distance</span> <span class="o">+=</span> <span class="n">distance_between</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="n">fitness</span> <span class="o">+=</span> <span class="n">total_distance</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="o">*</span> <span class="mf">0.01</span>
+
+    <span class="k">if</span> <span class="n">plot_trajectory</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">earth</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">earth_position</span><span class="p">,</span> <span class="n">earth_radius</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">moon</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">moon_position</span><span class="p">,</span> <span class="n">moon_radius</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">earth</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">moon</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s">&#39;Earth&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="n">earth_position</span><span class="p">,</span>  <span class="n">xycoords</span><span class="o">=</span><span class="s">&#39;data&#39;</span><span class="p">,</span>
+                      <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s">&#39;offset points&#39;</span><span class="p">,</span>
+                      <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s">&quot;-&gt;&quot;</span><span class="p">))</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s">&#39;Moon&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="n">moon_position</span><span class="p">,</span>  <span class="n">xycoords</span><span class="o">=</span><span class="s">&#39;data&#39;</span><span class="p">,</span>
+                      <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s">&#39;offset points&#39;</span><span class="p">,</span>
+                      <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s">&quot;-&gt;&quot;</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">position</span><span class="p">]</span> 
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">position</span><span class="p">]</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">&#39;gist_rainbow&#39;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">)</span>  
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">&quot;equal&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="s">&quot;on&quot;</span><span class="p">)</span>
+        <span class="n">projdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{0}/{1}.pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">projdir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fitness</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        
+    <span class="k">return</span> <span class="n">fitness</span>
+</pre></div>
+</div>
+<p>This function does the majority of the work for the evaluation. It accepts the parameters that are being evolved, and it simulates the trajectory of a satellite as it moves around the Moon and back to the Earth. The fitness of the trajectory is as follows:</p>
+<p>fitness = minimum distance from moon + 1% of total distance traveled + Moon crash penalty - Earth landing reward</p>
+<p>The penalty/reward is 100000, and the fitness is designed to be minimized.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">moonshot_evaluator</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">chromosome</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">orbital_height</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">satellite_mass</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">boost_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="n">chromosome</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">chromosome</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">initial_y_velocity</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moonshot</span><span class="p">(</span><span class="n">orbital_height</span><span class="p">,</span> <span class="n">satellite_mass</span><span class="p">,</span> <span class="n">boost_velocity</span><span class="p">,</span> <span class="n">initial_y_velocity</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+    
+</pre></div>
+</div>
+<p>The evaluator simply calls the <cite>moonshot</cite> function.</p>
+</div>
+<div class="section" id="id11">
+<h3>The Evolutionary Computation<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rand</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+<span class="n">rand</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()))</span>
+<span class="c"># The constraints are as follows:</span>
+<span class="c">#             orbital   satellite   boost velocity      initial y</span>
+<span class="c">#             height    mass        (x,       y)        velocity</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">((</span><span class="mf">6e6</span><span class="p">,</span>      <span class="mf">10.0</span><span class="p">,</span>       <span class="mf">3e3</span><span class="p">,</span>    <span class="o">-</span><span class="mf">10000.0</span><span class="p">,</span>   <span class="mi">4000</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mf">8e6</span><span class="p">,</span>      <span class="mf">40.0</span><span class="p">,</span>       <span class="mf">9e3</span><span class="p">,</span>     <span class="mf">10000.0</span><span class="p">,</span>   <span class="mi">6000</span><span class="p">))</span>
+
+<span class="n">algorithm</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+<span class="n">algorithm</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+<span class="n">algorithm</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">file_observer</span>
+<span class="n">algorithm</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+<span class="n">algorithm</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span>
+<span class="n">algorithm</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">blend_crossover</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+<span class="n">projdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+<span class="n">stat_file_name</span> <span class="o">=</span> <span class="s">&#39;{0}/moonshot_ec_statistics.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">projdir</span><span class="p">)</span>
+<span class="n">ind_file_name</span> <span class="o">=</span> <span class="s">&#39;{0}/moonshot_ec_individuals.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">projdir</span><span class="p">)</span>
+<span class="n">stat_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">stat_file_name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">ind_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">ind_file_name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">final_pop</span> <span class="o">=</span> <span class="n">algorithm</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">satellite_generator</span><span class="p">,</span>
+                             <span class="n">evaluator</span><span class="o">=</span><span class="n">moonshot_evaluator</span><span class="p">,</span>
+                             <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                             <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                             <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="n">constraints</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">constraints</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                             <span class="n">num_selected</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                             <span class="n">tournament_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                             <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                             <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+                             <span class="n">statistics_file</span><span class="o">=</span><span class="n">stat_file</span><span class="p">,</span>
+                             <span class="n">individuals_file</span><span class="o">=</span><span class="n">ind_file</span><span class="p">)</span>
+
+<span class="n">stat_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">ind_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c"># Sort and print the fittest individual, who will be at index 0.</span>
+<span class="n">final_pop</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">best</span> <span class="o">=</span> <span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">components</span> <span class="o">=</span> <span class="n">best</span><span class="o">.</span><span class="n">candidate</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">Fittest individual:&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">best</span><span class="p">)</span>
+<span class="n">moonshot</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">components</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">components</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">plot_trajectory</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results, if plotted, will look similar to the figure below. Here, the color denotes the passage of time, from red to violet.
+You can <a class="reference download internal" href="_downloads/moonshot.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
+<img alt="Sample Results" class="align-center" src="_images/moonshot.jpg" style="width: 600px;" />
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[3]</a></td><td>This example was suggested and implemented by Mike Vella (<a class="reference external" href="mailto:vellamike&#37;&#52;&#48;gmail&#46;com">vellamike<span>&#64;</span>gmail<span>&#46;</span>com</a>).</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#the-rastrigin-function">The Rastrigin Function</a><ul>
+<li><a class="reference internal" href="#the-generator">The Generator</a></li>
+<li><a class="reference internal" href="#the-evaluator">The Evaluator</a></li>
+<li><a class="reference internal" href="#the-evolutionary-computation">The Evolutionary Computation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#evolving-polygons">Evolving Polygons</a><ul>
+<li><a class="reference internal" href="#id5">The Generator</a></li>
+<li><a class="reference internal" href="#id6">The Evaluator</a></li>
+<li><a class="reference internal" href="#the-bounder">The Bounder</a></li>
+<li><a class="reference internal" href="#the-observer">The Observer</a></li>
+<li><a class="reference internal" href="#id7">The Evolutionary Computation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lunar-explorer">Lunar Explorer</a><ul>
+<li><a class="reference internal" href="#id9">The Generator</a></li>
+<li><a class="reference internal" href="#id10">The Evaluator</a></li>
+<li><a class="reference internal" href="#id11">The Evolutionary Computation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             >previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Troubleshooting &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Library Reference" href="reference.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Library Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<p>Given the flexibility of the inspyred library, along with the inherent stochasticity of the algorithms, it can be difficult to track down errors that will inevitably arise. This chapter provides some suggestions that may make the process easier.</p>
+<div class="section" id="always-store-the-seed">
+<h2>Always Store the Seed<a class="headerlink" href="#always-store-the-seed" title="Permalink to this headline">¶</a></h2>
+<p>Every inspyred algorithm requires that a pseudo-random number generator (PRNG) object be passed to it. This allows users to make use of different PRNGs if more sophisticated random number generation is desired (as long as it implements the relevant methods of Python&#8217;s <tt class="docutils literal"><span class="pre">Random</span></tt> class). This also means that the PRNG must be seeded prior to its passing to an inspyred algorithm. This seed should always be printed (preferably to a file) in case the exact run of the algorithm needs to be duplicated. If an error occurs in a given run, it can be restarted by providing the same seed. The following code provides an example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">my_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+<span class="n">seedfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;randomseed.txt&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">seedfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">my_seed</span><span class="p">))</span>
+<span class="n">seedfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">prng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+<span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">my_seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-and-consult-the-logs">
+<h2>Use and Consult the Logs<a class="headerlink" href="#use-and-consult-the-logs" title="Permalink to this headline">¶</a></h2>
+<p>All inspyred algorithms provide detailed debugging data using Python&#8217;s core <tt class="docutils literal"><span class="pre">logging</span></tt> module. This can be enabled by adding the following code to the <tt class="docutils literal"><span class="pre">main</span></tt> or calling scope:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;inspyred.ec&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s">&#39;inspyred.log&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">file_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> - </span><span class="si">%(name)s</span><span class="s"> - </span><span class="si">%(levelname)s</span><span class="s"> - </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Consulting the log file will often reveal which component is misbehaving or behaving unexpectedly.</p>
+</div>
+<div class="section" id="choose-operators-that-work-together">
+<h2>Choose Operators that Work Together<a class="headerlink" href="#choose-operators-that-work-together" title="Permalink to this headline">¶</a></h2>
+<p>The inspyred library gives users freedom to combine operators in almost any way they choose. However, this freedom means that the library will be unable to alert the user when a particular combination of operators produces a nonsensical algorithm. Remember that the operators must work together. For example, tournament selection may be employed to select 20 individuals from a population of 100. Then Gaussian mutation may be used to create 20 offspring. Finally, generational replacement may create the next generation from those offspring. The library will allow this, even though it means that, for at least the first generation, the population size is not constant. (It drops from 100 to 20.) The reason such a thing is allowed is because there may be a need for an algorithm that requires a non-constant population size. The inspyred library does not restrict any such algorithm. It is up to the user to ensure that all components work together to achieve the desired ends. (As stated previously, consulting the log file can help determine whether operators are combined correctly.)</p>
+</div>
+<div class="section" id="converting-from-ecspy">
+<h2>Converting from ecspy<a class="headerlink" href="#converting-from-ecspy" title="Permalink to this headline">¶</a></h2>
+<p>Users of the ecspy library, the precursor to inspyred, may want to modify their code to use the new library instead. The best advice in such a case would be to find a similar example from the inspyred documentation and use it as a basis for the existing code. The problem-specific generator and evaluator functions will probably not need to be changed (depending on their level of separation from the library itself), but the library functionality will probably change around them. Custom operators will similarly probably need only minor changes, if any.</p>
+<p>However, the pre-defined operators have been both modified and expanded. Existing keyword arguments should be checked carefully against the inspyred documentation to ensure that they are correct. An incorrectly named keyword argument will pass through unnoticed by the algorithm, and the default value will be used. For instance, in ecspy, a keyword argument for <tt class="docutils literal"><span class="pre">tournament_selection</span></tt> was <em>tourn_size</em>. In inspyred, it has been more clearly named <em>tournament_size</em>. If code from ecspy is used without modification, then the tournament selection will use 2 (the default) as the tournament size, regardless of the setting for <em>tourn_size</em>. In all cases, consult the documentation to ensure that the appropriate keyword arguments are used.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Troubleshooting</a><ul>
+<li><a class="reference internal" href="#always-store-the-seed">Always Store the Seed</a></li>
+<li><a class="reference internal" href="#use-and-consult-the-logs">Use and Consult the Logs</a></li>
+<li><a class="reference internal" href="#choose-operators-that-work-together">Choose Operators that Work Together</a></li>
+<li><a class="reference internal" href="#converting-from-ecspy">Converting from ecspy</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="previous chapter">Library Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/troubleshooting.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Library Reference"
+             >previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

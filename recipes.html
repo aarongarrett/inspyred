@@ -1,0 +1,819 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Recipes &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <link rel="next" title="Library Reference" href="reference.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Library Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="recipes">
+<h1>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h1>
+<p>This section provides a set of recipes that can be used to add additional functionality to inspyred.
+These recipes are not a part of the core library, but they have proven to be useful in the past for
+real-world programs. If they continue to be useful, they may be incorporated into inspyred in a
+future version.</p>
+<div class="section" id="lexicographic-ordering">
+<h2>Lexicographic Ordering<a class="headerlink" href="#lexicographic-ordering" title="Permalink to this headline">¶</a></h2>
+<p>In multiobjective optimization problems, alternatives to Pareto preference include linear weighting of the
+objectives and prioritizing the objectives from most to least important. Both of these methods essentially
+reduce the problem to a single objective optimization. Obviously, the weighting of the objectives would be
+handled entirely in the evaluator for the problem, so no special recipe is needed. But the prioritizing
+of the objectives, which is also known as lexicographic ordering, requires some additional effort.</p>
+<p>The fitness values for two individuals, <em>x</em> and <em>y</em>, should be compared such that, if the first objective
+for <em>x</em> is &#8220;better&#8221; (i.e., lower when minimizing or higher when maximizing) than the first objective for
+<em>y</em>, then <em>x</em> is considered &#8220;better&#8221; than <em>y</em>. If they are equal in that objective, then the second
+objective is considered in the same way. This process is repeated for all objectives.</p>
+<p>The following recipe provides a class to deal with such comparisons that is intended to function much like
+the <tt class="docutils literal"><span class="pre">inspyred.ec.emo.Pareto</span></tt> class.
+[<a class="reference download internal" href="_downloads/lexicographic.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="nd">@functools.total_ordering</span>
+<span class="k">class</span> <span class="nc">Lexicographic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">iter</span><span class="p">(</span><span class="n">maximize</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">maximize</span> <span class="o">=</span> <span class="p">[</span><span class="n">maximize</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span> <span class="o">=</span> <span class="n">maximize</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">maximize</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">my_evaluator</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Lexicographic</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+
+<span class="k">def</span> <span class="nf">my_generator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()]</span>
+    
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">u</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Lexicographic</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">]:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> &lt; </span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">q</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;----------------------------------------&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> &lt; </span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">q</span><span class="p">))</span>
+    
+</pre></div>
+</div>
+</div>
+<div class="section" id="constraint-selection">
+<h2>Constraint Selection<a class="headerlink" href="#constraint-selection" title="Permalink to this headline">¶</a></h2>
+<p>Optimization problems often have to deal with constraints and constraint violations. The following recipe
+provides one example of how to handle such a thing with inspyred. Here, candidates represent ordered pairs
+and their fitness is simply their distance from the origin. However, we provide a constraint that punishes
+candidates that lie outside of the unit circle. Such a scenario should produce a candidate that lies on the
+unit circle. Note also that <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> or some other fitness sharing or niching scheme could
+be used to generate many such points on the circle.
+[<a class="reference download internal" href="_downloads/constraint_selection.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">inspyred</span> <span class="kn">import</span> <span class="n">ec</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">variators</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">replacers</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">terminators</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">observers</span>
+
+<span class="k">def</span> <span class="nf">my_constraint_function</span><span class="p">(</span><span class="n">candidate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the number of constraints that candidate violates.&quot;&quot;&quot;</span>
+    <span class="c"># In this case, we&#39;ll just say that the point has to lie </span>
+    <span class="c"># within a circle centered at (0, 0) of radius 1.</span>
+    <span class="k">if</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">my_generator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="c"># Create pairs in the range [-2, 2].</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">my_evaluator</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="c"># The fitness will be how far the point is from</span>
+    <span class="c"># the origin. (We&#39;re maximizing, in this case.)</span>
+    <span class="c"># Note that the constraint heavily punishes individuals</span>
+    <span class="c"># who go beyond the unit circle. Therefore, these</span>
+    <span class="c"># two functions combined focus the evolution toward</span>
+    <span class="c"># finding individual who lie ON the circle.</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">my_constraint_function</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+
+<span class="k">def</span> <span class="nf">constrained_tournament_selection</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">num_selected</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;num_selected&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">constraint_func</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;constraint_function&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">tournament_size</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">pop</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_selected</span><span class="p">):</span>
+        <span class="n">tournament</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">tournament_size</span><span class="p">)</span>
+        <span class="c"># If there is not a constraint function,</span>
+        <span class="c"># just do regular tournament selection.</span>
+        <span class="k">if</span> <span class="n">constraint_func</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tournament</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cons</span> <span class="o">=</span> <span class="p">[</span><span class="n">constraint_func</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">candidate</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tournament</span><span class="p">]</span>
+            <span class="c"># If no constraints are violated, just do </span>
+            <span class="c"># regular tournament selection.</span>
+            <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">cons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tournament</span><span class="p">))</span>
+            <span class="c"># Otherwise, choose the least violator </span>
+            <span class="c"># (which may be a non-violator).</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tournament</span><span class="p">[</span><span class="n">cons</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">cons</span><span class="p">))])</span>
+    <span class="k">return</span> <span class="n">selected</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+<span class="n">myec</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">myec</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">constrained_tournament_selection</span>
+<span class="n">myec</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span>
+<span class="n">myec</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span>
+<span class="n">myec</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+<span class="n">myec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span>
+<span class="n">pop</span> <span class="o">=</span> <span class="n">myec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">my_generator</span><span class="p">,</span> <span class="n">my_evaluator</span><span class="p">,</span> 
+                  <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                  <span class="n">bounder</span><span class="o">=</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                  <span class="n">num_selected</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                  <span class="n">constraint_func</span><span class="o">=</span><span class="n">my_constraint_function</span><span class="p">,</span> 
+                  <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+                  
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pop</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">num_feasible</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pop</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">fitness</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">feasible_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pop</span><span class="p">):</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">fitness</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;0.98&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">feasible_count</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">num_feasible</span><span class="p">)))</span>
+        <span class="n">feasible_count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">pylab</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pylab</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">pylab</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;constraint_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="meta-evolutionary-computation">
+<h2>Meta-Evolutionary Computation<a class="headerlink" href="#meta-evolutionary-computation" title="Permalink to this headline">¶</a></h2>
+<p>The following recipe shows how an evolutionary computation can be used to evolve near-optimal operators and
+parameters for another evolutionary computation. In the EC literature, such a thing is generally referred
+to as a &#8220;meta-EC&#8221;.
+[<a class="reference download internal" href="_downloads/meta_ec.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">inspyred</span> <span class="kn">import</span> <span class="n">ec</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">selectors</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">replacers</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">variators</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">terminators</span>
+<span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">observers</span>
+
+
+<span class="k">class</span> <span class="nc">MetaEC</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">):</span>
+        <span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_variator</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_meta_terminator</span>
+        
+    <span class="k">def</span> <span class="nf">_create_selector_replacer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">):</span>
+        <span class="n">pop_size</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">replacer</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="n">sel</span> <span class="o">=</span> <span class="p">[</span><span class="n">selector</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">sel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop_size</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">sel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">),</span> <span class="n">pop_size</span><span class="p">))</span>
+        <span class="n">rep</span> <span class="o">=</span> <span class="p">[</span><span class="n">replacer</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">),</span> <span class="n">pop_size</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">replacer</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">rep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">pop_size</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">rep</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">_create_variators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">):</span>
+        <span class="n">crossover</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+        <span class="n">mutator</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+        <span class="n">variators</span> <span class="o">=</span> <span class="p">([</span><span class="n">crossover</span><span class="p">],</span> <span class="p">[</span><span class="n">mutator</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">crossover</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">crossover</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">crossover</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">crossover</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">crossover</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">mutator</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+            <span class="n">variators</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">variators</span>
+    
+    <span class="k">def</span> <span class="nf">_internal_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">cross</span><span class="p">,</span> <span class="n">mut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_variators</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_selector_replacer</span><span class="p">(</span><span class="n">random</span><span class="p">),</span> <span class="n">cross</span><span class="p">,</span> <span class="n">mut</span><span class="p">]</span>
+        
+    <span class="k">def</span> <span class="nf">_internal_variator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">cs_copy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cs_copy</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                <span class="n">cs_copy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_selector_replacer</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                <span class="n">cross</span><span class="p">,</span> <span class="n">mut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_variators</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+                <span class="n">cs_copy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cross</span>
+                <span class="n">cs_copy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mut</span>
+        <span class="k">return</span> <span class="n">cs_copy</span>
+
+    <span class="k">def</span> <span class="nf">_internal_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">population</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observer_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;{0}, {1}, {2}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">fitness</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observer_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_internal_terminator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">maxevals</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta_evaluations</span> <span class="o">+=</span> <span class="n">num_evaluations</span>
+        <span class="k">return</span> <span class="n">num_evaluations</span> <span class="o">&gt;=</span> <span class="n">maxevals</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta_evaluations</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_meta_evaluations</span>
+        
+    <span class="k">def</span> <span class="nf">_internal_meta_terminator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta_evaluations</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_meta_evaluations</span>
+        
+    <span class="k">def</span> <span class="nf">_internal_evaluator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">the_generator</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;the_generator&#39;</span><span class="p">)</span>
+        <span class="n">the_evaluator</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;the_evaluator&#39;</span><span class="p">)</span>
+        <span class="n">do_maximize</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;do_maximize&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+    
+        <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+            <span class="n">popsize</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">replacer</span><span class="p">,</span> <span class="n">crossover</span><span class="p">,</span> <span class="n">mutator</span><span class="p">,</span> <span class="n">myargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpret_candidate</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_trial_evaluations&#39;</span><span class="p">,</span> <span class="n">popsize</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">num_trials</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_trials&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">evo</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">)</span>
+            <span class="n">evo</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_terminator</span>
+            <span class="n">evo</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_observer</span>
+            <span class="n">evo</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">selector</span>
+            <span class="n">evo</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">crossover</span><span class="p">,</span> <span class="n">mutator</span><span class="p">]</span>
+            <span class="n">evo</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">replacer</span>
+            <span class="n">best_fit</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trials</span><span class="p">):</span>
+                <span class="n">final_pop</span> <span class="o">=</span> <span class="n">evo</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">the_generator</span><span class="p">,</span>
+                                       <span class="n">evaluator</span><span class="o">=</span><span class="n">the_evaluator</span><span class="p">,</span>
+                                       <span class="n">pop_size</span><span class="o">=</span><span class="n">popsize</span><span class="p">,</span>
+                                       <span class="n">maximize</span><span class="o">=</span><span class="n">do_maximize</span><span class="p">,</span>
+                                       <span class="n">args</span><span class="o">=</span><span class="n">myargs</span><span class="p">)</span>
+                <span class="n">best_fit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+            <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">best_fit</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">best_fit</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">fitness</span>
+    
+    <span class="k">def</span> <span class="nf">interpret_candidate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candidate</span><span class="p">):</span>
+        <span class="n">selector_mapping</span> <span class="o">=</span> <span class="p">(</span><span class="n">selectors</span><span class="o">.</span><span class="n">default_selection</span><span class="p">,</span>
+                            <span class="n">selectors</span><span class="o">.</span><span class="n">rank_selection</span><span class="p">,</span>
+                            <span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span><span class="p">,</span>
+                            <span class="n">selectors</span><span class="o">.</span><span class="n">truncation_selection</span><span class="p">,</span>
+                            <span class="n">selectors</span><span class="o">.</span><span class="n">uniform_selection</span><span class="p">)</span>
+        <span class="n">variator_mapping</span> <span class="o">=</span> <span class="p">(</span><span class="n">variators</span><span class="o">.</span><span class="n">blend_crossover</span><span class="p">,</span> 
+                            <span class="n">variators</span><span class="o">.</span><span class="n">heuristic_crossover</span><span class="p">,</span>
+                            <span class="n">variators</span><span class="o">.</span><span class="n">n_point_crossover</span><span class="p">,</span>
+                            <span class="n">variators</span><span class="o">.</span><span class="n">simulated_binary_crossover</span><span class="p">,</span>
+                            <span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span>
+                            <span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">,</span>
+                            <span class="n">variators</span><span class="o">.</span><span class="n">default_variation</span><span class="p">)</span>
+        <span class="n">replacer_mapping</span> <span class="o">=</span> <span class="p">(</span><span class="n">replacers</span><span class="o">.</span><span class="n">comma_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">crowding_replacement</span><span class="p">,</span> 
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">default_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">plus_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">random_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span><span class="p">,</span>
+                            <span class="n">replacers</span><span class="o">.</span><span class="n">truncation_replacement</span><span class="p">)</span>
+        
+        <span class="n">myargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="c"># Selectors</span>
+        <span class="k">if</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_selected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_selected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;tournament_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_selected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_selected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            
+        <span class="c"># Replacers</span>
+        <span class="k">if</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;crowding_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_elites&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_elites&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            
+        <span class="c"># Crossovers</span>
+        <span class="k">if</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;crossover_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;blx_alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;crossover_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;crossover_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;num_crossover_points&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;sbx_distribution_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;crossover_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;ux_bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            
+        <span class="c"># Mutators</span>
+        <span class="k">if</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;mutation_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">myargs</span><span class="p">[</span><span class="s">&#39;gaussian_stdev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            
+        <span class="k">return</span> <span class="p">(</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> 
+                <span class="n">selector_mapping</span><span class="p">[</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> 
+                <span class="n">replacer_mapping</span><span class="p">[</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> 
+                <span class="n">variator_mapping</span><span class="p">[</span><span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="n">variator_mapping</span><span class="p">[</span><span class="n">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="n">myargs</span><span class="p">)</span>
+                
+    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="p">[],</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;the_generator&#39;</span><span class="p">,</span> <span class="n">generator</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;the_evaluator&#39;</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;do_maximize&#39;</span><span class="p">,</span> <span class="n">maximize</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;num_elites&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;num_selected&#39;</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observer_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;metaec-individuals-file-&#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%m</span><span class="si">%d</span><span class="s">%Y-%H%M%S&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;.csv&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta_evaluations</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_meta_evaluations</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_generator</span><span class="p">,</span> 
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">_internal_evaluator</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">,</span> 
+                                                      <span class="n">seeds</span><span class="p">,</span> <span class="n">maximize</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observer_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">final_pop</span>
+        
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>  
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">import</span> <span class="nn">inspyred</span>
+
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rastrigin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">mec</span> <span class="o">=</span> <span class="n">MetaEC</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">mec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">mec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                           <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                           <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+                           <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                           <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                           <span class="n">num_trials</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+                           <span class="n">num_trial_evaluations</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> 
+                           <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+        
+    <span class="n">pop_size</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">replacer</span><span class="p">,</span> <span class="n">crossover</span><span class="p">,</span> <span class="n">mutator</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">mec</span><span class="o">.</span><span class="n">interpret_candidate</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">candidate</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Fitness: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Population Size: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pop_size</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Selector: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selector</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Replacer: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">replacer</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Crossover: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">crossover</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Mutator: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mutator</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Parameters:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;    {0}: {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Actual Evaluations Used: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mec</span><span class="o">.</span><span class="n">_meta_evaluations</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="micro-evolutionary-computation">
+<h2>Micro-Evolutionary Computation<a class="headerlink" href="#micro-evolutionary-computation" title="Permalink to this headline">¶</a></h2>
+<p>Another approach that has been successfully applied to some difficult problems is to use many small-population EC&#8217;s
+for small numbers of evaluations in succession. Each succeeding EC is seeded with the best solution from the
+previous run. This is somewhat akin to a random-restart hill-climbing approach, except that information about the
+best solution so far is passed along during each restart.
+[<a class="reference download internal" href="_downloads/micro_ec.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">class</span> <span class="nc">MicroEC</span><span class="p">(</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">):</span>
+        <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bounder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">[</span><span class="s">&#39;_ec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+        
+        <span class="k">if</span> <span class="n">seeds</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">seeds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">bounder</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">bounder</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">termination_cause</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">generator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluator</span> <span class="o">=</span> <span class="n">evaluator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounder</span> <span class="o">=</span> <span class="n">bounder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span> <span class="o">=</span> <span class="n">maximize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">microseeds</span> <span class="o">=</span> <span class="n">seeds</span>
+        
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_terminate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">):</span>
+            <span class="n">microec</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">)</span>
+            <span class="n">microec</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span>
+            <span class="n">microec</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variator</span>
+            <span class="n">microec</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacer</span>
+            <span class="n">microec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span>
+            <span class="n">microec</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+            <span class="n">maxevals</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span>
+            <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;micro_evaluations&#39;</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">microec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span> <span class="n">evaluator</span><span class="o">=</span><span class="n">evaluator</span><span class="p">,</span> 
+                                    <span class="n">pop_size</span><span class="o">=</span><span class="n">pop_size</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="n">microseeds</span><span class="p">,</span> 
+                                    <span class="n">maximize</span><span class="o">=</span><span class="n">maximize</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxevals</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">microseeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">candidate</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span> <span class="o">+=</span> <span class="n">microec</span><span class="o">.</span><span class="n">num_evaluations</span>
+
+            <span class="c"># Migrate individuals.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migrator</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">,</span> 
+                                            <span class="n">population</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> 
+                                            <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+            
+            <span class="c"># Archive individuals.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">archiver</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">,</span> <span class="n">archive</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="p">,</span> 
+                                         <span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span> <span class="o">+=</span> <span class="n">microec</span><span class="o">.</span><span class="n">num_generations</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">:</span>
+                    <span class="n">obs</span><span class="p">(</span><span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">num_generations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> 
+                        <span class="n">num_evaluations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">(</span><span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">num_generations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> 
+                              <span class="n">num_evaluations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">random</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+
+    <span class="k">def</span> <span class="nf">rastrigin_generator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">rastrigin_evaluator</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+            <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cand</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">fitness</span>
+        
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="n">micro</span> <span class="o">=</span> <span class="n">MicroEC</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">archiver</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">archivers</span><span class="o">.</span><span class="n">best_archiver</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span>
+    <span class="n">micro</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">micro</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">rastrigin_generator</span><span class="p">,</span> 
+                             <span class="n">rastrigin_evaluator</span><span class="p">,</span> 
+                             <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+                             <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                             <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
+                             <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+                             <span class="n">micro_evaluations</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                             <span class="n">num_selected</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                             <span class="n">gaussian_stdev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+                             
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Actual evaluations: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">micro</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">micro</span><span class="o">.</span><span class="n">archive</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="network-migrator">
+<h2>Network Migrator<a class="headerlink" href="#network-migrator" title="Permalink to this headline">¶</a></h2>
+<p>The following custom migrator is a callable class (because the migrator must behave like a callback function)
+that allows solutions to migrate from one network machine to another. It is assumed that the EC islands are
+running on the given IP:port combinations.
+[<a class="reference download internal" href="_downloads/network_migrator.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">SocketServer</span>
+
+<span class="k">class</span> <span class="nc">NetworkMigrator</span><span class="p">(</span><span class="n">SocketServer</span><span class="o">.</span><span class="n">ThreadingMixIn</span><span class="p">,</span> <span class="n">SocketServer</span><span class="o">.</span><span class="n">TCPServer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Defines a migration function across a network.</span>
+<span class="sd">    </span>
+<span class="sd">    This callable class acts as a migration function that </span>
+<span class="sd">    allows candidate solutions to migrate from one population</span>
+<span class="sd">    to another via TCP/IP connections.</span>
+<span class="sd">    </span>
+<span class="sd">    The migrator is constructed by specifying the IP address</span>
+<span class="sd">    of the server (hosting the population from which individuals</span>
+<span class="sd">    emigrate) as an IP-port tuple and the addresses of the clients </span>
+<span class="sd">    (hosting the populations to which individuals from the server </span>
+<span class="sd">    immigrate) as a list of IP-port tuples. The ``max_migrants`` </span>
+<span class="sd">    parameter specifies the size of the queue of migrants waiting </span>
+<span class="sd">    to immigrate to the server from the clients; the newest migrants </span>
+<span class="sd">    replace older ones in the queue.</span>
+<span class="sd">    </span>
+<span class="sd">    Note: In order to use this migration operator, individuals</span>
+<span class="sd">    must be pickle-able.</span>
+<span class="sd">        </span>
+<span class="sd">    The following is an example of the use of this operator::</span>
+<span class="sd">    </span>
+<span class="sd">        m = NetworkMigrator((&#39;192.168.1.10&#39;, 25125),</span>
+<span class="sd">                            [(&#39;192.168.1.11&#39;, 12345), (&#39;192.168.1.12&#39;, 54321)], </span>
+<span class="sd">                            max_migrants=3)</span>
+<span class="sd">                        </span>
+<span class="sd">    Since the NetworkMigrator object is a server, it should always</span>
+<span class="sd">    call the ``shutdown()`` method when it is no longer needed, in</span>
+<span class="sd">    order to give back its resources.</span>
+
+<span class="sd">    Public Attributes:</span>
+<span class="sd">    </span>
+<span class="sd">    - *client_addresses* -- the list of IP address tuples</span>
+<span class="sd">      (IP, port) to which individuals should migrate</span>
+<span class="sd">    - *migrants* -- the deque of migrants (of maximum size </span>
+<span class="sd">      specified by ``max_migrants``) waiting to immigrate </span>
+<span class="sd">      to client populations</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_address</span><span class="p">,</span> <span class="n">client_addresses</span><span class="p">,</span> <span class="n">max_migrants</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="n">SocketServer</span><span class="o">.</span><span class="n">TCPServer</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_address</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_addresses</span> <span class="o">=</span> <span class="n">client_addresses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">migrants</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">max_migrants</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+
+    <span class="k">def</span> <span class="nf">finish_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">client_address</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rbufsize</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">wbufsize</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">rfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s">&#39;rb&#39;</span><span class="p">,</span> <span class="n">rbufsize</span><span class="p">)</span>
+            <span class="n">wfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s">&#39;wb&#39;</span><span class="p">,</span> <span class="n">wbufsize</span><span class="p">)</span>
+
+            <span class="n">pickle_data</span> <span class="o">=</span> <span class="n">rfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">migrant</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pickle_data</span><span class="p">)</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">migrants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">migrant</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wfile</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+                <span class="n">wfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">wfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>        
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exc_traceback</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform the migration.</span>
+<span class="sd">        </span>
+<span class="sd">        This function serves as the migration operator. Here, a random address</span>
+<span class="sd">        is chosen from the ``client_addresses`` list, and a random individual</span>
+<span class="sd">        is chosen from the population to become the migrant. A socket is opened</span>
+<span class="sd">        to the chosen client address, and the chosen migrant is pickled and</span>
+<span class="sd">        sent to the NetworkMigrator object running at the client address. Then</span>
+<span class="sd">        the migrant queue on the current machine is queried for a migrant</span>
+<span class="sd">        to replace the one sent. If one is found, it replaces the newly</span>
+<span class="sd">        migrated individual; otherwise, the individual remains in the population.</span>
+<span class="sd">        </span>
+<span class="sd">        Any immigrants may also be re-evaluated before insertion into the</span>
+<span class="sd">        current population by setting the ``evaluate_migrant`` keyword</span>
+<span class="sd">        argument in ``args`` to True. This is useful if the evaluation</span>
+<span class="sd">        functions in different populations are different and we want to compare</span>
+<span class="sd">        &quot;apples to apples,&quot; as they say.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        </span>
+<span class="sd">        - *random* -- the random number generator object</span>
+<span class="sd">        - *population* -- the population of Individuals</span>
+<span class="sd">        - *args* -- a dictionary of keyword arguments</span>
+<span class="sd">        </span>
+<span class="sd">        Optional keyword arguments in the ``args`` parameter:</span>
+<span class="sd">        </span>
+<span class="sd">        - *evaluate_migrant* -- whether to re-evaluate the immigrant (default False)</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">evaluate_migrant</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;evaluate_migrant&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">client_address</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client_addresses</span><span class="p">)</span>
+        <span class="n">migrant_index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pickle_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">population</span><span class="p">[</span><span class="n">migrant_index</span><span class="p">])</span>
+        <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">client_address</span><span class="p">)</span>
+            <span class="n">sock</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">pickle_data</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">migrant</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migrants</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">migrant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migrants</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">migrant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">evaluate_migrant</span><span class="p">:</span>
+                <span class="n">fit</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">evaluator</span><span class="p">([</span><span class="n">migrant</span><span class="p">],</span> <span class="n">args</span><span class="p">)</span>
+                <span class="n">migrant</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">num_evaluations</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">population</span><span class="p">[</span><span class="n">migrant_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">migrant</span>
+        <span class="k">return</span> <span class="n">population</span>
+		
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migrants</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Recipes</a><ul>
+<li><a class="reference internal" href="#lexicographic-ordering">Lexicographic Ordering</a></li>
+<li><a class="reference internal" href="#constraint-selection">Constraint Selection</a></li>
+<li><a class="reference internal" href="#meta-evolutionary-computation">Meta-Evolutionary Computation</a></li>
+<li><a class="reference internal" href="#micro-evolutionary-computation">Micro-Evolutionary Computation</a></li>
+<li><a class="reference internal" href="#network-migrator">Network Migrator</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Library Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/recipes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Library Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

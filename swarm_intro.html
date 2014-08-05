@@ -1,0 +1,153 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to Swarm Intelligence &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction-to-swarm-intelligence">
+<h1>Introduction to Swarm Intelligence<a class="headerlink" href="#introduction-to-swarm-intelligence" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="particle-swarm-optimization">
+<h2>Particle Swarm Optimization<a class="headerlink" href="#particle-swarm-optimization" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the evolutionary computation techniques described above, another nature-inspired optimization algorithm, called <em>particle swarm optimization</em> (PSO), was developed by Kennedy and Eberhart in 1995 <a class="reference internal" href="#kennedy1995">[Kennedy1995]</a>. Inspired by the movement of bird flocks and insect swarms, they attempted to develop a model of swarm behavior that could be used to solve optimization problems. To create the analogy, they imagined a flock of birds flying around in search of a corn field. Each bird was capable of remembering the best location it had found, and each was capable of knowing the best location that any of the birds had found. The birds were allowed to fly around while being pulled toward both their individual best locations and the flock&#8217;s best location. Kennedy and Eberhart found that their simulation of this analogy produced very realistic-looking behavior in their virtual flocks <a class="reference internal" href="#kennedy1995">[Kennedy1995]</a>.</p>
+<p>In the PSO model presented in <a class="reference internal" href="#kennedy1995">[Kennedy1995]</a> and expanded in <a class="reference internal" href="#kennedy1997">[Kennedy1997]</a>, each particle is composed of three vectors: <span class="math">\(x\)</span>, <span class="math">\(p\)</span>, and <span class="math">\(v\)</span>. These represent the particle&#8217;s current location, best location found, and velocity, respectively. These vectors are each of the same dimensionality as the search space. Additionally, each particle maintains a two values: one corresponding to the fitness of the <span class="math">\(x\)</span> vector and the other to the fitness of the <span class="math">\(p\)</span> vector.</p>
+<p>As the particles in the swarm move around the search space, their velocities are first updated according to the following equation:</p>
+<div class="math">
+\[v_{id} = v_{id} + \phi_1R_1(p_{id} - x_{id}) + \phi_2R_2(g_{id} - x_{id})\]</div>
+<p>In this equation, <span class="math">\(v_{id}\)</span> is the velocity of the <span class="math">\(i^{th}\)</span> particle along the <span class="math">\(d^{th}\)</span> dimension. The <span class="math">\(g\)</span> vector represents the best location found by the flock, and <span class="math">\(R_1\)</span> and <span class="math">\(R_2\)</span> are uniform random values such that <span class="math">\(0 \leq R_1,R_2 \leq 1\)</span>. Finally, <span class="math">\(\phi_1\)</span> and <span class="math">\(\phi_2\)</span> are two constants that control the influence of the personal best and the global best locations, respectively, on the particle&#8217;s velocity. These values are often referred to as <em>cognitive</em> and <em>social</em> learning rates, respectively <a class="reference internal" href="#kennedy1997">[Kennedy1997]</a>.</p>
+<p>After the velocity vector is updated, the particle&#8217;s location is updated by applying the following equation:</p>
+<div class="math">
+\[x_{id} = x_{id} + v_{id}\]</div>
+<p>At this point, the new location&#8217;s fitness is evaluated and compared to the fitness of the particle&#8217;s personal best location. If the new location is better, then it also becomes the new personal best location for the particle.</p>
+<p>The <em>topology</em> for a swarm refers to the structure of the neighborhood for each particle. In a <em>star topology</em>, all the particles exist in the same neighborhood, so the global best vector represents the best location found by any particle in the swarm. In contrast, a <em>ring topology</em> arranges the particles into overlapping neighborhoods of size <em>h</em>. The global best vector in this type of topology represents the best location found by any particle in that particle&#8217;s neighborhood.</p>
+<p>In 1999, Maurice Clerc introduced an improvement to the equation for updating the velocity of a particle <a class="reference internal" href="#clerc1999">[Clerc1999]</a>. He introduced a constant to be multiplied to the new velocity before updating the location of the particle. He called this constant the <em>constriction coefficient</em> <a class="reference internal" href="#clerc1999">[Clerc1999]</a>. The calculation of this coefficient is as follows:</p>
+<div class="math">
+\[K = \frac{2}{\left|2 - \phi - \sqrt{\phi^2 - 4\phi}\right|}\]</div>
+<p>In this equation, <span class="math">\(\phi_ = \phi_1 + \phi_2\)</span> and <span class="math">\(\phi &gt; 4\)</span>. The constriction coefficient is used to restrain the velocity vector of each particle so that it does not grow unbounded.</p>
+<p>Finally, various other models have been proposed as alternatives to the so-called full model presented above <a class="reference internal" href="#eberhart2000">[Eberhart2000]</a>. The <em>cognitive-only</em> model sets <span class="math">\(\phi_1\)</span> to 0, while the <em>social-only</em> model sets <span class="math">\(\phi_2\)</span> to 0. A <em>selfless</em> model was also developed which was identical to the social-only model except that a particle&#8217;s personal best was not included in the search for that particle&#8217;s neighborhood&#8217;s global best <a class="reference internal" href="#eberhart2000">[Eberhart2000]</a>.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="clerc1999" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Clerc1999]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> M. Clerc, &#8220;The swarm and the queen: towards a deterministic and adaptive particle swarm optimization,&#8221; in <em>Proceedings of the International Conference on Evolutionary Computation</em>, Washington, DC, 1999, pp. 1951-1957.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="eberhart2000" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Eberhart2000]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> R. C. Eberhart and Y. Shi, &#8220;Comparing inertia weights and constriction factors in particle swarm optimization,&#8221; in <em>Proceedings of the Congress on Evolutionary Computation</em>, Washington, DC, 2000, pp. 84-88.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="kennedy1995" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Kennedy1995]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id3">3</a>)</em> J. Kennedy and R. Eberhart, &#8220;Particle swarm optimization,&#8221; in <em>Proceedings of the IEEE Conference on Neural Networks</em>, Perth, Australia, 1995, pp. 1942-1948.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="kennedy1997" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Kennedy1997]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> J. Kennedy, &#8220;The particle swarm: Social adaptation of knowledge,&#8221; in <em>Proceedings of the International Conference on Evolutionary Computation</em>, Indianapolis, IN, 1997, pp. 303-308.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to Swarm Intelligence</a><ul>
+<li><a class="reference internal" href="#particle-swarm-optimization">Particle Swarm Optimization</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/swarm_intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

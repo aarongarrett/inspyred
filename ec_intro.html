@@ -1,0 +1,224 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to Evolutionary Computation &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction-to-evolutionary-computation">
+<h1>Introduction to Evolutionary Computation<a class="headerlink" href="#introduction-to-evolutionary-computation" title="Permalink to this headline">¶</a></h1>
+<p>The beginnings of evolutionary computation (EC) can be traced back as far as the late 1950&#8217;s, but it was the last two decades that saw truly exponential increases in the amount of attention given to the field <a class="reference internal" href="#back1997">[Back1997]</a>. EC can be thought of more as a problem solving strategy than a one-size-fits-all tool <a class="reference internal" href="#back1997">[Back1997]</a> <a class="reference internal" href="#michalewicz2004">[Michalewicz2004]</a>. At its core, an EC attempts to mimic the biological process of evolution in order to solve a given problem <a class="reference internal" href="#fogel2000">[Fogel2000]</a>. This, consequently, suggests that there should be a simulated analog to the biological process of reproduction and some measure of or mechanism for survivability. Indeed, these must be defined for any EC. However, before these processes can be defined, it is necessary first to define what makes up an <em>individual</em>.</p>
+<p>An individual is simply a <em>candidate solution</em>. As such, it can be represented in any way that the designer chooses, and most representations are problem-specific. The manner in which a candidate solution is represented is known as the <em>genotype</em> <a class="reference internal" href="#back1997">[Back1997]</a> (in keeping with the biological analogy). Since two or more solutions must be compared with one another in order to determine which is &#8220;better&#8221;, it is necessary to also have some measure of &#8220;goodness&#8221;, which in the EC literature is known as the <em>fitness</em> of an individual <a class="reference internal" href="#back1997">[Back1997]</a>. The fitness is a measure of how well one candidate solution solves a problem, sometimes in comparison to the performance of other candidate solutions. Usually, candidate solutions cannot be compared (and thus their fitness values cannot be assessed) by simply looking at the genotype values. Instead, the candidate solution undergoes a transformation to convert its genotype into the corresponding <em>phenotype</em> <a class="reference internal" href="#back1997">[Back1997]</a>, which can be thought of as its representation in the fitness space.</p>
+<p>To make this discussion more clear, an example is in order. Suppose we wish to find the real value for <span class="math">\(-10 \leq x \leq 10\)</span> such that it minimizes the function</p>
+<div class="math">
+\[y = f(x) = x^2\]</div>
+<p>(Clearly, the minimum value will occur when <span class="math">\(x=0\)</span>.) In the simplest case, we would say that the <em>x</em> value represents the genotype of the candidate solution, and the set of all candidate solutions is simply the line from -10 to 10. The phenotype for a given <em>x</em> value, in this case, is also that same <em>x</em> value. (In other words, the mapping function between genotype space and phenotype space is simply the identity function.) The phenotype space is simply all of the possible values for <em>x</em>, which in this case is the curve representing <span class="math">\(f(x) = x^2\)</span>. The fitness for a candidate solution <em>x</em> is simply the value of <em>y</em> at that point, <span class="math">\(y = x^2\)</span>.</p>
+<p>Once the representation is chosen, the <em>evolutionary operators</em> must be specified. These operators define the mechanisms of <em>selection</em>, <em>variation</em>, and <em>replacement</em> <a class="reference internal" href="#back1997">[Back1997]</a>. Selection determines how solutions are chosen to participate in the creation of new solutions. Variation determines how new solutions are created from existing solutions (i.e., reproduction) and how existing solutions are modified to explore new areas of the search space (i.e., mutation). Replacement determines how solutions are chosen to remain viable candidates. In some cases, one or more of these operators are simply identity functions, which means that they have no actual function. However, when viewed in this way, all of the EC approaches are simply variations on this basic theme <a class="reference internal" href="#back1997">[Back1997]</a>.</p>
+<p>The basic EC is presented in the algorithm listing below. There, <tt class="docutils literal"><span class="pre">P[t]</span></tt> is a set of candidate solutions (the <em>population</em>) at time <tt class="docutils literal"><span class="pre">t</span></tt>. Typically, the population is of a fixed size. The <tt class="docutils literal"><span class="pre">Evaluate()</span></tt> function performs the mapping from genotype to phenotype space and assigns appropriate fitness values to each individual in the population. The <tt class="docutils literal"><span class="pre">Selection()</span></tt> function takes the current population and returns a set of individuals to be used for variation. The <tt class="docutils literal"><span class="pre">Variation()</span></tt> function takes that set of individuals and produces a set of new individuals, <tt class="docutils literal"><span class="pre">offspring</span></tt>. Finally, the <tt class="docutils literal"><span class="pre">Replacement()</span></tt> function performs the selection of individuals (chosen from the union of the original and modified individuals) which will make up the population in the next generation.</p>
+<div class="highlight-python"><pre>ALGORITHM EvolutionaryComputation()
+   t = 0
+   Initialize(P[t]) # P[t] represents the population at time t
+   Evaluate(P[t])
+   WHILE NOT termination_criteria LOOP
+      parents = Selection(P[t])
+      offspring = Variation(P[t])
+      Evaluate(offspring)
+      P[t+1] = Replacement(P[t] union offspring)
+      t = t + 1
+   END LOOP</pre>
+</div>
+<p>An important point of which to take note here is that the number of <em>function evaluations</em> is critical when comparing two evolutionary computation algorithms. A function evaluation is simply one mapping from genotype to fitness. (The mapping is often called the <em>evaluation function</em> or <em>fitness function</em>, so the term &#8220;function evaluations&#8221; is appropriate.) That is the typical processing unit used in the EC literature when referring to the efficiency of a particular algorithm.</p>
+<p>According to Back et al <a class="reference internal" href="#back1997">[Back1997]</a>, the majority of current evolutionary computation implementations come from three different, but related, areas: genetic algorithms (GAs) <a class="reference internal" href="#forrest1993">[Forrest1993]</a>, <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>, <a class="reference internal" href="#holland1975">[Holland1975]</a>, <a class="reference internal" href="#vose1999">[Vose1999]</a>, evolutionary programming (EPs) <a class="reference internal" href="#back1997">[Back1997]</a>, <a class="reference internal" href="#fogel1966">[Fogel1966]</a>, <a class="reference internal" href="#fogel1994">[Fogel1994]</a>, and evolution strategies (ESs) <a class="reference internal" href="#back1991">[Back1991]</a>, <a class="reference internal" href="#fogel1994">[Fogel1994]</a>. However, as stated earlier, each area is defined by its choice of representation and/or operators. These choices are discussed in the following sections.</p>
+<div class="section" id="genetic-algorithms">
+<h2>Genetic Algorithms<a class="headerlink" href="#genetic-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>Genetic algorithms were first proposed by John Holland in the 1960&#8217;s <a class="reference internal" href="#holland1975">[Holland1975]</a> in an attempt to leverage the power of natural selection to solve difficult optimization problems. In the canonical genetic algorithm, sometimes referred to as the <em>simple genetic algorithm</em> (SGA) <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>, <a class="reference internal" href="#vose1999">[Vose1999]</a>, the genotype for a candidate solution is represented as a binary string. The evaluation function is then a mapping from a binary string to some real-valued measure of fitness (as determined from the phenotype). As in all EC approaches, the fitness function is entirely problem-dependent.</p>
+<p>The selection operator used in an SGA is <em>fitness proportionate selection</em> <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>, sometimes called &#8220;roulette wheel&#8221; selection. In this type of selection, the probability of selecting a particular individual increases proportional to that individual&#8217;s fitness. In some sense, the size of the individual&#8217;s &#8220;roulette wheel section&#8221; increases with its fitness. In this way, the more fit an individual, the more likely it is to survive. However, this operator is stochastic, so it is possible that even the strongest individual will not survive (and, likewise, the weakest individual may survive).</p>
+<p>A similar yet slightly more complex selection procedure is <em>remainder stochastic selection</em>. In this type of selection, any individual with an above average fitness is guaranteed to participate in creating the next generation of individuals, and the remaining slots are randomly assigned to individuals in a manner proportional to how well their fitness values compare to the average fitness. In this setup, the objective fitness for an individual (as determined by the fitness function) is modified to produce a relative fitness value as follows:</p>
+<div class="math">
+\[f_i^r = \frac{f_i}{\bar f}\]</div>
+<p>where <span class="math">\(f_i^r\)</span> is the relative fitness of individual <em>i</em>, <span class="math">\(f_i\)</span> is the objective fitness of individual <em>i</em>, and <span class="math">\(\bar f\)</span> is the average fitness of the current population.</p>
+<p>Another popular selection method is <em>tournament selection</em> <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>. In this type of selection, a subset of candidate solutions is chosen from the existing population against each of which the individual in question is compared (as if that individual is competing in a single-elimination tournament against all individuals in the subset). If the individual&#8217;s fitness is better than all candidate solutions in the subset, then that individual is selected. The size of the subset (often called the <em>tournament size</em> <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>) can be used to control the <em>selection pressure</em> <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>.</p>
+<p>After selection is performed, the participating individuals undergo variation through crossover and mutation. Each of these operators is performed according to some probability of occurrence (typically denoted <span class="math">\(p_c\)</span> and <span class="math">\(p_m\)</span>, respectively) that must be specified as parameters to the system. The variation operators used in an SGA are single-point crossover <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a> and bit-flip mutation <a class="reference internal" href="#goldberg1989">[Goldberg1989]</a>. In single-point crossover, two individuals (i.e., binary strings) are chosen, along with a single recombination point that determines the position in each string that will be &#8220;cut&#8221;. The individuals are then recombined at that point to form two new individuals. This can be understood more clearly in the following example (where the vertical bar represents the recombination point):</p>
+<div class="highlight-python"><pre>Parent A: XXXXXXX | XX
+Parent B: YYYYYYY | YY
+Child 1 : XXXXXXXYY
+Child 2 : YYYYYYYXX</pre>
+</div>
+<p>This operation is applied to randomly selected parents with probability <span class="math">\(p_c\)</span>, which is typically set to be a fairly high (e.g., 0.75) value. Bit-flip mutation simply means that each bit in a newly created binary string is changed to the opposite value with probability <span class="math">\(p_m\)</span>, which is typically set to be a very low (e.g., 0.01) value.</p>
+<p>The resultant population is made up entirely of the newly-created offspring. This is known as <em>generational replacement</em> <a class="reference internal" href="#back1997">[Back1997]</a>, which means that no individuals from the previous generation are allowed to survive to the succeeding generations. This type of replacement strategy can be augmented with <em>elitism</em> <a class="reference internal" href="#back1997">[Back1997]</a>, which would allow some proportion (as determined by system parameters) of the most fit individuals to survive into the next generation. Additionally, some genetic algorithms make use of <em>steady-state replacement</em> <a class="reference internal" href="#back1997">[Back1997]</a>, in which only one offspring is created in a given generation, and this offspring always replaces the least-fit individual in the current population.</p>
+</div>
+<div class="section" id="evolutionary-programming">
+<h2>Evolutionary Programming<a class="headerlink" href="#evolutionary-programming" title="Permalink to this headline">¶</a></h2>
+<p>In the early 1960&#8217;s, Lawrence Fogel attempted to use simulated evolution, which he called Evolutionary Programming (EP), to create artificial intelligence <a class="reference internal" href="#fogel1966">[Fogel1966]</a>, <a class="reference internal" href="#fogel1994">[Fogel1994]</a>. In this seminal work, finite state machines (FSMs) were evolved to predict future symbols from a given input stream <a class="reference internal" href="#fogel1994">[Fogel1994]</a>. Using a FSM representation of the individuals in the population required novel variation operators. The following operators were used in the work: changing an output symbol, changing a state transition, adding a state, deleting a state, and changing a state. The fitness of a given FSM was determined by how accurate its predictions were, given the sequence of input symbols. More recently, EP approaches have been applied to real-valued, continuous optimization problems, but these approaches are similar to the approaches used in evolution strategies <a class="reference internal" href="#fogel1994">[Fogel1994]</a>, which are discussed below.</p>
+</div>
+<div class="section" id="evolution-strategies">
+<h2>Evolution Strategies<a class="headerlink" href="#evolution-strategies" title="Permalink to this headline">¶</a></h2>
+<p>At the same time that Holland was developing the genetic algorithm, Rechenberg was independently discovering a technique for using natural selection for optimization problems, which he termed <em>evolution strategies</em> <a class="reference internal" href="#back1991">[Back1991]</a>. The simplest version of an evolution strategy (ES) is what is known as a <em>two-membered ES</em> <a class="reference internal" href="#back1991">[Back1991]</a> or, more commonly, a (1+1)-ES. In this scenario, a single individual, represented as a vector of real values, comprises the population. At each generation, that individual is mutated (the variation operator) along each dimension using a Gaussian distribution with zero mean and a given variance (provided as a parameter to the system) to produce an offspring. The fitness values for both the parent and the offspring are compared, and the better of the two individuals is allowed to become the parent in the next generation.</p>
+<p>It was discovered <a class="reference internal" href="#back1991">[Back1991]</a> that online adjustment of the mutation rate (i.e., the variance of the normal distribution) could provide better performance. This online adjustment is known as the <em>one-fifth success rule</em> <a class="reference internal" href="#back1991">[Back1991]</a>, which states that around <span class="math">\(\frac{1}{5}\)</span> of the mutations should be successful. If the actual number of successful mutations is greater than <span class="math">\(\frac{1}{5}\)</span>, increase the variance. If the number is less than <span class="math">\(\frac{1}{5}\)</span>, decrease the variance.</p>
+<p>In addition to online adjustment of the variance, more sophisticated versions of evolution strategies can also include the particular variance as a part of the genotype to be evolved <a class="reference internal" href="#back1991">[Back1991]</a>. It is also possible to evolve and use a different variance along each dimension of the problem <a class="reference internal" href="#back1991">[Back1991]</a>, thus allowing the search for a solution to conform more appropriately to the topology of the search space. When variances are included in the genotype, an additional parameter is needed to serve as the variance used to mutate the evolved variances.</p>
+<p>The (1+1)-ES did not truly make use of the idea of a population of individuals, so this concept was generalized and extended to yield the (<span class="math">\(\mu+1\)</span>)-ES <a class="reference internal" href="#back1991">[Back1991]</a>. In this system, a population of <span class="math">\(\mu\)</span> individuals is maintained in each generation. Additionally, a reproduction operator is included that selects two (or more) individuals from this population and recombines them to form a new individual. This recombination is simply a random selection of each component from the parents. Once the new individual is created, it undergoes mutation as mentioned above. Finally, each offspring is added to the population if it is better than the least fit individual, producing the new population for the next generation. This approach can be and has been <a class="reference internal" href="#back1991">[Back1991]</a>, of course, extended to a (<span class="math">\(\mu+\lambda\)</span>)-ES, in which <span class="math">\(\mu\)</span> individuals produce <span class="math">\(\lambda\)</span> offspring. The best <span class="math">\(\mu\)</span> individuals of the <span class="math">\(\mu+\lambda\)</span> individuals are then chosen to survive.</p>
+<p>It is also possible to provide somewhat of an analog to the generational replacement of a GA within an ES. This approach is known as a (<span class="math">\(\mu,\lambda\)</span>)-ES (where <span class="math">\(\lambda\)</span> must be greater than or equal to <span class="math">\(\mu\)</span>) <a class="reference internal" href="#back1991">[Back1991]</a>. In such a scenario, the <span class="math">\(\mu\)</span> individuals are used to create <span class="math">\(\lambda\)</span> offspring, and from those offspring only, <span class="math">\(\mu\)</span> individuals are chosen to comprise the population in the next generation.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="back1991" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Back1991]</td><td><em>(<a class="fn-backref" href="#id18">1</a>, <a class="fn-backref" href="#id36">2</a>, <a class="fn-backref" href="#id37">3</a>, <a class="fn-backref" href="#id38">4</a>, <a class="fn-backref" href="#id39">5</a>, <a class="fn-backref" href="#id40">6</a>, <a class="fn-backref" href="#id41">7</a>, <a class="fn-backref" href="#id42">8</a>, <a class="fn-backref" href="#id43">9</a>, <a class="fn-backref" href="#id44">10</a>)</em> T. Back, F. Hoffmeister, and H.-P. Schwefel, &#8220;A survey of evolution strategies,&#8221; in <em>Proceedings of the 4th International Conference on Genetic Algorithms</em>, R. K. Belew and L. B. Booker, Eds. Morgan Kaufman, 1991, pp. 2-9.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="back1997" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Back1997]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id5">3</a>, <a class="fn-backref" href="#id6">4</a>, <a class="fn-backref" href="#id7">5</a>, <a class="fn-backref" href="#id8">6</a>, <a class="fn-backref" href="#id9">7</a>, <a class="fn-backref" href="#id10">8</a>, <a class="fn-backref" href="#id15">9</a>, <a class="fn-backref" href="#id29">10</a>, <a class="fn-backref" href="#id30">11</a>, <a class="fn-backref" href="#id31">12</a>)</em> T. Back, U. Hammel, and H.-P. Schwefel, &#8220;Evolutionary computation: Comments on the history and current state,&#8221; <em>IEEE Transactions on Evolutionary Computation</em>, vol. 1, no. 1, pp. 3-17, apr 1997.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fogel1966" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Fogel1966]</td><td><em>(<a class="fn-backref" href="#id16">1</a>, <a class="fn-backref" href="#id32">2</a>)</em> L. J. Fogel, A. J. Owens, and M. J. Walsh, <em>Artificial intelligence through simulated evolution</em>. New York: Wiley, 1966.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fogel1994" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Fogel1994]</td><td><em>(<a class="fn-backref" href="#id17">1</a>, <a class="fn-backref" href="#id19">2</a>, <a class="fn-backref" href="#id33">3</a>, <a class="fn-backref" href="#id34">4</a>, <a class="fn-backref" href="#id35">5</a>)</em> D. B. Fogel, &#8220;An introduction to simulated evolutionary optimization,&#8221; <em>IEEE Transactions on Neural Networks</em>, vol. 5, no. 1, pp. 3-14, Jan. 1994.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fogel2000" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[Fogel2000]</a></td><td>D. B. Fogel, &#8220;What is evolutionary computation?&#8221; <em>IEEE Spectrum</em>, vol. 37, no. 2, pp. 26-32, Feb. 2000.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="forrest1993" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[Forrest1993]</a></td><td>S. Forrest, &#8220;Genetic algorithms: principles of natural selection applied to computation,&#8221; <em>Science</em>, vol. 60, pp. 872-878, Aug. 1993.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="goldberg1989" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Goldberg1989]</td><td><em>(<a class="fn-backref" href="#id12">1</a>, <a class="fn-backref" href="#id21">2</a>, <a class="fn-backref" href="#id23">3</a>, <a class="fn-backref" href="#id24">4</a>, <a class="fn-backref" href="#id25">5</a>, <a class="fn-backref" href="#id26">6</a>, <a class="fn-backref" href="#id27">7</a>, <a class="fn-backref" href="#id28">8</a>)</em> D. E. Goldberg, <em>Genetic Algorithms in Search, Optimization and Machine Learning</em>. Reading, MA: Addison-Wesley Publishing Company, Inc., 1989.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="holland1975" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Holland1975]</td><td><em>(<a class="fn-backref" href="#id13">1</a>, <a class="fn-backref" href="#id20">2</a>)</em> J. H. Holland, <em>Adaptation in Natural and Artificial Systems</em>. Ann Arbor, MI: University of Michigan Press, 1975.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="michalewicz2004" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[Michalewicz2004]</a></td><td>Z. Michalewicz and D. B. Fogel, <em>How to Solve It: Modern Heuristics</em>. Springer, 2004.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="vose1999" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Vose1999]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id22">2</a>)</em> M. D. Vose, <em>The Simple Genetic Algorithm: Foundations and Theory</em>. MIT Press, 1999.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to Evolutionary Computation</a><ul>
+<li><a class="reference internal" href="#genetic-algorithms">Genetic Algorithms</a></li>
+<li><a class="reference internal" href="#evolutionary-programming">Evolutionary Programming</a></li>
+<li><a class="reference internal" href="#evolution-strategies">Evolution Strategies</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ec_intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

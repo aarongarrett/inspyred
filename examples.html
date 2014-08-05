@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; inspyred 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <link rel="next" title="Recipes" href="recipes.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipes.html" title="Recipes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>For many people, it is easiest to learn a new library by adapting existing examples to
+their purposes. For that reason, many examples are presented in this section in the
+hope that they will prove useful to others using inspyred.</p>
+<div class="section" id="standard-algorithms">
+<h2>Standard Algorithms<a class="headerlink" href="#standard-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>The following examples illustrate how to use the different, built-in, evolutionary computations.
+They are (hopefully) simple and self-explanatory. Please note that each one uses an existing
+benchmark problem. This is just an expedience; it is not necessary. The full list of existing
+benchmarks can be found in the <a class="reference internal" href="reference.html"><em>Library Reference</em></a>. See the <a class="reference internal" href="tutorial.html"><em>Tutorial</em></a> for examples that
+do not make use of a benchmark problem.</p>
+<div class="section" id="genetic-algorithm">
+<h3>Genetic Algorithm<a class="headerlink" href="#genetic-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>In this example, a GA is used to evolve a solution to the binary version of the Schwefel benchmark.
+[<a class="reference download internal" href="_downloads/ga_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span> 
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Schwefel</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> 
+                                         <span class="n">dimension_bits</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">GA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> 
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                          
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evolution-strategy">
+<h3>Evolution Strategy<a class="headerlink" href="#evolution-strategy" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an ES is used to evolve a solution to the Rosenbrock benchmark.
+[<a class="reference download internal" href="_downloads/es_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rosenbrock</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">ES</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span><span class="p">,</span> 
+                     <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">diversity_termination</span><span class="p">]</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simulated-annealing">
+<h3>Simulated Annealing<a class="headerlink" href="#simulated-annealing" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an SA is used to evolve a solution to the Sphere benchmark.
+[<a class="reference download internal" href="_downloads/sa_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">SA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+                          
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="differential-evolution-algorithm">
+<h3>Differential Evolution Algorithm<a class="headerlink" href="#differential-evolution-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>In this example, a DEA is used to evolve a solution to the Griewank benchmark.
+[<a class="reference download internal" href="_downloads/dea_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Griewank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">DEA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+                          
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>        
+</pre></div>
+</div>
+</div>
+<div class="section" id="estimation-of-distribution-algorithm">
+<h3>Estimation of Distribution Algorithm<a class="headerlink" href="#estimation-of-distribution-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an EDA is used to evolve a solution to the Rastrigin benchmark.
+[<a class="reference download internal" href="_downloads/eda_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rastrigin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EDA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                          <span class="n">num_offspring</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span> 
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pareto-archived-evolution-strategy-paes">
+<h3>Pareto Archived Evolution Strategy (PAES)<a class="headerlink" href="#pareto-archived-evolution-strategy-paes" title="Permalink to this headline">¶</a></h3>
+<p>In this example, a PAES is used to evolve a solution to the Kursawe multiobjective benchmark.
+[<a class="reference download internal" href="_downloads/paes_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Kursawe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">emo</span><span class="o">.</span><span class="n">PAES</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                          <span class="n">max_archive_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                          <span class="n">num_grid_divisions</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">final_arc</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">archive</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solutions: </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
+                                                     <span class="n">problem</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span> 
+                      <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="nondominated-sorting-genetic-algorithm-nsga-ii">
+<h3>Nondominated Sorting Genetic Algorithm (NSGA-II)<a class="headerlink" href="#nondominated-sorting-genetic-algorithm-nsga-ii" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an NSGA2 is used to evolve a solution to the Kursawe multiobjective benchmark.
+[<a class="reference download internal" href="_downloads/nsga_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+   
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Kursawe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">emo</span><span class="o">.</span><span class="n">NSGA2</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">blend_crossover</span><span class="p">,</span> 
+                   <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">final_arc</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">archive</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solutions: </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
+                                                     <span class="n">problem</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span> 
+                      <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ea</span>
+        
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="section" id="particle-swarm-optimization">
+<h3>Particle Swarm Optimization<a class="headerlink" href="#particle-swarm-optimization" title="Permalink to this headline">¶</a></h3>
+<p>In this example, a PSO is used to evolve a solution to the Ackley benchmark.
+[<a class="reference download internal" href="_downloads/pso_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Ackley</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">swarm</span><span class="o">.</span><span class="n">PSO</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">topology</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">swarm</span><span class="o">.</span><span class="n">topologies</span><span class="o">.</span><span class="n">ring_topology</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> 
+                          <span class="n">neighborhood_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span> 
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ant-colony-optimization">
+<h3>Ant Colony Optimization<a class="headerlink" href="#ant-colony-optimization" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an ACS is used to evolve a solution to the TSP benchmark.
+[<a class="reference download internal" href="_downloads/acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">110.0</span><span class="p">,</span> <span class="mf">225.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">161.0</span><span class="p">,</span> <span class="mf">280.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">325.0</span><span class="p">,</span> <span class="mf">554.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">490.0</span><span class="p">,</span> <span class="mf">285.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">157.0</span><span class="p">,</span> <span class="mf">443.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">283.0</span><span class="p">,</span> <span class="mf">379.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">397.0</span><span class="p">,</span> <span class="mf">566.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">306.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">343.0</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">552.0</span><span class="p">,</span> <span class="mf">199.0</span><span class="p">)]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+              
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">TSP</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">swarm</span><span class="o">.</span><span class="n">ACS</span><span class="p">(</span><span class="n">prng</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+    <span class="n">ac</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">constructor</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">archive</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">element</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Distance: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ac</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="customized-algorithms">
+<h2>Customized Algorithms<a class="headerlink" href="#customized-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>The true benefit of the inspyred library is that it allows the programmer to customize
+almost every aspect of the algorithm. This is accomplished primarily through the use of
+function (or function-like) callbacks that can be specified by the programmer. The
+following examples show how to customize many different parts of the evolutionary
+computation.</p>
+<div class="section" id="custom-evolutionary-computation">
+<h3>Custom Evolutionary Computation<a class="headerlink" href="#custom-evolutionary-computation" title="Permalink to this headline">¶</a></h3>
+<p>In this example, an evolutionary computation is created which uses tournament selection,
+uniform crossover, Gaussian mutation, and steady-state replacement.
+[<a class="reference download internal" href="_downloads/custom_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Ackley</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> 
+                   <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">tournament_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                          <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span> 
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-archiver">
+<h3>Custom Archiver<a class="headerlink" href="#custom-archiver" title="Permalink to this headline">¶</a></h3>
+<p>The purpose of the archiver is to provide a mechanism for candidate solutions to be
+maintained without necessarily remaining in the population. This is important for
+most multiobjective evolutionary approaches, but it can also be useful for single-objective
+problems, as well. In this example, an archiver is created that maintains the <em>worst</em>
+individual found. (There is no imaginable reason why one might actually do this. It
+is just for illustration purposes.)
+[<a class="reference download internal" href="_downloads/custom_archiver_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_archiver</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">archive</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">worst_in_pop</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">worst_in_arc</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">worst_in_pop</span> <span class="o">&lt;</span> <span class="n">worst_in_arc</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">worst_in_pop</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">archive</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">worst_in_pop</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rosenbrock</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">ES</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span><span class="p">,</span> 
+                   <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">archive_observer</span><span class="p">]</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">archiver</span> <span class="o">=</span> <span class="n">my_archiver</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">archive</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-observer">
+<h3>Custom Observer<a class="headerlink" href="#custom-observer" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes it is helpful to see certain aspects of the current population as it evolves.
+The purpose of the &#8220;observer&#8221; functions is to provide a function that executes at the
+end of each generation so that the process can be monitored accordingly. In this example,
+the only information desired at each generation is the current best individual.
+[<a class="reference download internal" href="_downloads/custom_observer_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_observer</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;{0:6} -- {1} : {2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_generations</span><span class="p">,</span> 
+                                      <span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">,</span> 
+                                      <span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">)))</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rastrigin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">ES</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">my_observer</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-replacer">
+<h3>Custom Replacer<a class="headerlink" href="#custom-replacer" title="Permalink to this headline">¶</a></h3>
+<p>The replacers are used to determine which of the parents, offspring, and current population
+should survive into the next generation. In this example, survivors are determined to be top 50% of
+individuals from the population along with 50% chosen randomly from the offspring. (Once again, this
+is simply an example. There may be no good reason to create such a replacement scheme.)
+[<a class="reference download internal" href="_downloads/custom_replacer_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_replacer</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">parents</span><span class="p">,</span> <span class="n">offspring</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">psize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+    <span class="n">population</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">survivors</span> <span class="o">=</span> <span class="n">population</span><span class="p">[:</span><span class="n">psize</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">num_remaining</span> <span class="o">=</span> <span class="n">psize</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">survivors</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_remaining</span><span class="p">):</span>
+        <span class="n">survivors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">offspring</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">survivors</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Ackley</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">ES</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">my_replacer</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-selector">
+<h3>Custom Selector<a class="headerlink" href="#custom-selector" title="Permalink to this headline">¶</a></h3>
+<p>The selectors are used to determine which individuals in the population should become parents.
+In this example, parents are chosen such that 50% of the time the best individual in the population
+is chosen to be a parent and 50% of the time a random individual is chosen. As before, this is an
+example selector that may have little practical value.
+[<a class="reference download internal" href="_downloads/custom_selector_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_selector</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_selected&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">population</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">selected</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Griewank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">DEA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">my_selector</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
+                          
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-terminator">
+<h3>Custom Terminator<a class="headerlink" href="#custom-terminator" title="Permalink to this headline">¶</a></h3>
+<p>The terminators are used to determine when the evolutionary process should end. All terminators
+return a Boolean value where True implies that the evolution should end. In this example, the evolution
+should continue until the average Hamming distance between all combinations of candidates falls below
+a specified minimum.
+[<a class="reference download internal" href="_downloads/custom_terminator_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_terminator</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">num_generations</span><span class="p">,</span> <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">min_ham_dist</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;minimum_hamming_distance&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">ham_dist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">ham_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">candidate</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">candidate</span><span class="p">)))</span>
+    <span class="n">avg_ham_dist</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ham_dist</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ham_dist</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">avg_ham_dist</span> <span class="o">&lt;=</span> <span class="n">min_ham_dist</span>
+        
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Schwefel</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> 
+                                         <span class="n">dimension_bits</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">GA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">my_terminator</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">minimum_hamming_distance</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+                          
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-variator">
+<h3>Custom Variator<a class="headerlink" href="#custom-variator" title="Permalink to this headline">¶</a></h3>
+<p>The variators provide what are normally classified as &#8220;crossover&#8221; and &#8220;mutation,&#8221; however
+even more exotic variators can be defined. Remember that a list of variators can be specified
+that will act as a pipeline with the output of the first being used as the input to the second, etc.
+In this example, the binary candidate is mutated such that two points are chosen and the bits
+between each point are put in reverse order. For example, <tt class="docutils literal"><span class="pre">0010100100</span></tt> would become <tt class="docutils literal"><span class="pre">0010010100</span></tt>
+if the third and eighth bits are the chosen points.
+[<a class="reference download internal" href="_downloads/custom_variator_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="c"># Note that we could have used the @inspyred.ec.variators.mutator</span>
+<span class="c"># decorator here and simplified our custom variator to </span>
+<span class="c">#</span>
+<span class="c">#     def my_variator(random, candidate, args)</span>
+<span class="c">#</span>
+<span class="c"># where candidate is a single candidate. Such a function would</span>
+<span class="c"># just return the single mutant.</span>
+<span class="k">def</span> <span class="nf">my_variator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">mutants</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mutants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">y</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mutants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[:</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">y</span><span class="p">:</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="n">mutants</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Schwefel</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> 
+                                         <span class="n">dimension_bits</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">GA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="n">my_variator</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">20000</span><span class="p">)</span>
+                          
+    <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="advanced-usage">
+<h2>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h2>
+<p>The examples in this section deal with less commonly used aspects of the library.
+Be aware that these parts may not have received as much testing as the more
+core components exemplified above.</p>
+<div class="section" id="discrete-optimization">
+<h3>Discrete Optimization<a class="headerlink" href="#discrete-optimization" title="Permalink to this headline">¶</a></h3>
+<p>Discrete optimization problems often present difficulties for naive evolutionary
+computation approaches. Special care must be taken to generate and maintain
+feasible solutions and/or to sufficiently penalize infeasible solutions.
+Ant colony optimization approaches were created to deal with discrete optimization
+problems. In these examples, we consider two of the most famous discrete optimization
+benchmark problems &#8211; the Traveling Salesman Problem (TSP) and the Knapsack
+problem. The background on these problems is omitted here because it can easily
+be found elsewhere.</p>
+<div class="section" id="the-traveling-salesman-problem">
+<h4>The Traveling Salesman Problem<a class="headerlink" href="#the-traveling-salesman-problem" title="Permalink to this headline">¶</a></h4>
+<p>Candidate solutions for the TSP can be most easily be represented as permutations
+of the list of city numbers (enumerating the order in which cities should be
+visited). For instance, if there are 5 cities, then a candidate solution might
+be <tt class="docutils literal"><span class="pre">[4,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">2,</span> <span class="pre">3]</span></tt>. This is how the <tt class="docutils literal"><span class="pre">TSP</span></tt> benchmark represents solutions.
+However, this simple representation forces us to work harder to ensure that our
+solutions remain feasible during crossover and mutation. Therefore, we need
+to use variators suited to the task, as shown in the example below.
+[<a class="reference download internal" href="_downloads/tsp_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">110.0</span><span class="p">,</span> <span class="mf">225.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">161.0</span><span class="p">,</span> <span class="mf">280.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">325.0</span><span class="p">,</span> <span class="mf">554.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">490.0</span><span class="p">,</span> <span class="mf">285.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">157.0</span><span class="p">,</span> <span class="mf">443.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">283.0</span><span class="p">,</span> <span class="mf">379.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">397.0</span><span class="p">,</span> <span class="mf">566.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">306.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">343.0</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">552.0</span><span class="p">,</span> <span class="mf">199.0</span><span class="p">)]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+              
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">TSP</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">partially_matched_crossover</span><span class="p">,</span> 
+                   <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">inversion_mutation</span><span class="p">]</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                          <span class="n">tournament_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">population</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: {0}: {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">),</span> <span class="mi">1</span><span class="o">/</span><span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As an alternative, we can use ant colony optimization to solve the TSP. This
+example was shown previously, but it is presented again here for completeness.
+[<a class="reference download internal" href="_downloads/acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">110.0</span><span class="p">,</span> <span class="mf">225.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">161.0</span><span class="p">,</span> <span class="mf">280.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">325.0</span><span class="p">,</span> <span class="mf">554.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">490.0</span><span class="p">,</span> <span class="mf">285.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">157.0</span><span class="p">,</span> <span class="mf">443.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">283.0</span><span class="p">,</span> <span class="mf">379.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">397.0</span><span class="p">,</span> <span class="mf">566.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">306.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">),</span> 
+              <span class="p">(</span><span class="mf">343.0</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">552.0</span><span class="p">,</span> <span class="mf">199.0</span><span class="p">)]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+              
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">TSP</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">swarm</span><span class="o">.</span><span class="n">ACS</span><span class="p">(</span><span class="n">prng</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+    <span class="n">ac</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">constructor</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">archive</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">element</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Distance: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ac</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-knapsack-problem">
+<h4>The Knapsack Problem<a class="headerlink" href="#the-knapsack-problem" title="Permalink to this headline">¶</a></h4>
+<p>Candidate solutions for the Knapsack problem can be represented as either a binary
+list (for the 0/1 Knapsack) or as a list of non-negative integers (for the Knapsack
+with duplicates). In each case, the list is the same length as the number of items,
+and each element of the list corresponds to the quantity of the corresponding item
+to place in the knapsack. For the evolutionary computation, we can use
+<tt class="docutils literal"><span class="pre">uniform_crossover</span></tt> <em>and</em> <tt class="docutils literal"><span class="pre">gaussian_mutation</span></tt>. The reason we are able to use
+Gaussian mutation here, even though the candidates are composed of discrete values,
+is because the bounder created by the <tt class="docutils literal"><span class="pre">Knapsack</span></tt> benchmark is an instance of
+<tt class="docutils literal"><span class="pre">DiscreteBounder</span></tt>, which automatically moves an illegal component to its nearest
+legal value.
+[<a class="reference download internal" href="_downloads/knapsack_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">7</span><span class="p">,</span><span class="mi">369</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">346</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">322</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">347</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">348</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">383</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">347</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">364</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">340</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">324</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">365</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">314</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">306</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">394</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">326</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">310</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">339</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">381</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">353</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">383</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">317</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">349</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">396</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">353</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">322</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">329</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">386</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">382</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">369</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">304</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">392</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">390</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">307</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">318</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">359</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">378</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">376</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">330</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">331</span><span class="p">)]</span>
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Knapsack</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> 
+                   <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> 
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">2500</span><span class="p">,</span>
+                          <span class="n">tournament_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">population</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: {0}: {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">),</span> 
+                                               <span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once again, as an alternative we can use ant colony optimization. Just for variety,
+we&#8217;ll use it to solve the 0/1 Knapsack problem (<tt class="docutils literal"><span class="pre">duplicates=False</span></tt>).
+[<a class="reference download internal" href="_downloads/knapsack_acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">7</span><span class="p">,</span><span class="mi">369</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">346</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">322</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">347</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">348</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">383</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">347</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">364</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">340</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">324</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">365</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">314</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">306</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">394</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">326</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">310</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">339</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">381</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">353</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">383</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">317</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">349</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">396</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">353</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">322</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">329</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">386</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">382</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">369</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">304</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">392</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">390</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">307</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">318</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">359</span><span class="p">),</span> 
+             <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">378</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">376</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">330</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">331</span><span class="p">)]</span>
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Knapsack</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">swarm</span><span class="o">.</span><span class="n">ACS</span><span class="p">(</span><span class="n">prng</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+    <span class="n">ac</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">generation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constructor</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> 
+                          <span class="n">max_generations</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">archive</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: {0}: {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">candidate</span><span class="p">),</span> 
+                                               <span class="n">best</span><span class="o">.</span><span class="n">fitness</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ac</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="evaluating-individuals-concurrently">
+<h3>Evaluating Individuals Concurrently<a class="headerlink" href="#evaluating-individuals-concurrently" title="Permalink to this headline">¶</a></h3>
+<p>One of the most lauded aspects of many bio-inspired algorithms is their
+inherent parallelism. Taking advantage of this parallelism is important in
+real-world problems, which are often computationally expensive. There are
+two approaches available in inspyred to perform parallel evaluations for
+candidate solutions. The first makes use of the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> module
+that exists in core Python 2.6+. The second makes use of a third-party
+library called <a class="reference external" href="http://www.parallelpython.com">Parallel Python</a> (pp),
+which can be used for either multi-core processing on a single machine or
+distributed processing across a network.</p>
+<div class="section" id="the-multiprocessing-module">
+<h4>The <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> Module<a class="headerlink" href="#the-multiprocessing-module" title="Permalink to this headline">¶</a></h4>
+<p>Using the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> approach to parallel evaluations is probably
+the better choice if all evaluations are going to be split among multiple
+processors or cores on a single machine. This is because the module is part
+of the core Python library (2.6+) and provides a simple, standard interface
+for setting up the parallelism. As shown in the example below, the only
+additional parameter is the name of the &#8220;actual&#8221; evaluation function and
+the (optional) number of CPUs to use.
+[<a class="reference download internal" href="_downloads/parallel_evaluation_mp_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">generate_rastrigin</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_inputs&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">evaluate_rastrigin</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> 
+                                   <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span> 
+                                   <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cs</span><span class="p">])</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+    
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">DEA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">ea</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span> 
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generate_rastrigin</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">evaluators</span><span class="o">.</span><span class="n">parallel_evaluation_mp</span><span class="p">,</span>
+                          <span class="n">mp_evaluator</span><span class="o">=</span><span class="n">evaluate_rastrigin</span><span class="p">,</span> 
+                          <span class="n">mp_num_cpus</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                          <span class="n">num_inputs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                          
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span> 
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h4>Parallel Python<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>The Parallel Python approach to multiprocessing is best suited for use across
+a network of computers (though it <em>can</em> be used on a single machine, as well).
+It takes just a little effort to install and setup pp
+on each machine, but once it&#8217;s complete, the network becomes a very efficient
+computing cluster. This is a capability that the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> approach
+simply does not have, and it provides incredible scalability. However, pp
+requires additional, non-standard parameters to be passed in, as illustrated
+in the example below.
+[<a class="reference download internal" href="_downloads/parallel_evaluation_pp_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c"># Define an additional &quot;necessary&quot; function for the evaluator</span>
+<span class="c"># to see how it must be handled when using pp.</span>
+<span class="k">def</span> <span class="nf">my_squaring_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">generate_rastrigin</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_inputs&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">evaluate_rastrigin</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([(</span><span class="n">my_squaring_function</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> 
+                                   <span class="mi">10</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span> 
+                                   <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cs</span><span class="p">])</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+    
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="p">())</span> 
+        
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">DEA</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">ea</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span> 
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generate_rastrigin</span><span class="p">,</span> 
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">evaluators</span><span class="o">.</span><span class="n">parallel_evaluation_pp</span><span class="p">,</span>
+                          <span class="n">pp_evaluator</span><span class="o">=</span><span class="n">evaluate_rastrigin</span><span class="p">,</span> 
+                          <span class="n">pp_dependencies</span><span class="o">=</span><span class="p">(</span><span class="n">my_squaring_function</span><span class="p">,),</span>
+                          <span class="n">pp_modules</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;math&quot;</span><span class="p">,),</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                          <span class="n">num_inputs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">final_pop</span><span class="p">)</span> 
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solution: </span><span class="se">\n</span><span class="s">{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">ea</span>
+            
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="island-models">
+<h3>Island Models<a class="headerlink" href="#island-models" title="Permalink to this headline">¶</a></h3>
+<p>Along with parallel evaluation of the fitness, it is also possible to create
+different populations that evolve independently but are capable of sharing
+solutions among themselves. Such approaches are known as &#8220;island models&#8221; and
+can be accomplished within inspyred by making use of the migrator callback.
+The following example illustrates a very simple two-island model using the
+<tt class="docutils literal"><span class="pre">inspyred.ec.migrators.MultiprocessingMigrator</span></tt> migrator. Remember that
+custom migrators can easily be constructed for more specific needs.
+[<a class="reference download internal" href="_downloads/islands_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">create_island</span><span class="p">(</span><span class="n">rand_seed</span><span class="p">,</span> <span class="n">island_number</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">mp_migrator</span><span class="p">):</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">psize</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">rand</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">rand_seed</span><span class="p">)</span>
+    <span class="n">ec</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">file_observer</span><span class="p">]</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">generational_replacement</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">blend_crossover</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
+    <span class="n">ec</span><span class="o">.</span><span class="n">migrator</span> <span class="o">=</span> <span class="n">mp_migrator</span>
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">evaluator</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">bounder</span><span class="p">,</span>
+                          <span class="n">maximize</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span>
+                          <span class="n">statistics_file</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;stats_</span><span class="si">%d</span><span class="s">.csv&quot;</span> <span class="o">%</span> <span class="n">island_number</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">),</span>
+                          <span class="n">individuals_file</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;inds_</span><span class="si">%d</span><span class="s">.csv&quot;</span> <span class="o">%</span> <span class="n">island_number</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">),</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="n">evals</span><span class="p">,</span>
+                          <span class="n">num_elites</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">pop_size</span><span class="o">=</span><span class="n">psize</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="n">psize</span><span class="p">,</span>
+                          <span class="n">evaluate_migrant</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>  
+    <span class="n">cpus</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">benchmarks</span><span class="o">.</span><span class="n">Rastrigin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">mp_migrator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">migrators</span><span class="o">.</span><span class="n">MultiprocessingMigrator</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rand_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cpus</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">create_island</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">rand_seed</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">mp_migrator</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+        <span class="n">j</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="replacement-via-niching">
+<h3>Replacement via Niching<a class="headerlink" href="#replacement-via-niching" title="Permalink to this headline">¶</a></h3>
+<p>An example of a not-quite-standard replacer is the <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> which
+provides a niching capability. An example using this replacer is given below. Here,
+the candidates are just single numbers (but created as singleton lists so as to
+be <tt class="docutils literal"><span class="pre">Sequence</span></tt> types for some of the built-in operators) between 0 and 26. Their
+fitness values are simply the value of the sine function using the candidate value
+as input. Since the sine function is periodic and goes through four periods between
+0 and 26, this function is multimodal. So we can use <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> to
+ensure that all maxima are found.
+[<a class="reference download internal" href="_downloads/niche_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">inspyred</span>
+
+<span class="k">def</span> <span class="nf">my_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)])</span>
+
+<span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">)]</span>
+    
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cand</span><span class="p">])</span>
+        <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fitness</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">prng</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prng</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">prng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+        <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> 
+    
+    <span class="n">ea</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">crowding_replacement</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
+
+    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generate</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> 
+                          <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">),</span>
+                          <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                          <span class="n">num_selected</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                          <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                          <span class="n">crowding_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                          <span class="n">distance_function</span><span class="o">=</span><span class="n">my_distance</span><span class="p">)</span>
+                          
+    <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">final_pop</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">26.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;niche_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#standard-algorithms">Standard Algorithms</a><ul>
+<li><a class="reference internal" href="#genetic-algorithm">Genetic Algorithm</a></li>
+<li><a class="reference internal" href="#evolution-strategy">Evolution Strategy</a></li>
+<li><a class="reference internal" href="#simulated-annealing">Simulated Annealing</a></li>
+<li><a class="reference internal" href="#differential-evolution-algorithm">Differential Evolution Algorithm</a></li>
+<li><a class="reference internal" href="#estimation-of-distribution-algorithm">Estimation of Distribution Algorithm</a></li>
+<li><a class="reference internal" href="#pareto-archived-evolution-strategy-paes">Pareto Archived Evolution Strategy (PAES)</a></li>
+<li><a class="reference internal" href="#nondominated-sorting-genetic-algorithm-nsga-ii">Nondominated Sorting Genetic Algorithm (NSGA-II)</a></li>
+<li><a class="reference internal" href="#particle-swarm-optimization">Particle Swarm Optimization</a></li>
+<li><a class="reference internal" href="#ant-colony-optimization">Ant Colony Optimization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#customized-algorithms">Customized Algorithms</a><ul>
+<li><a class="reference internal" href="#custom-evolutionary-computation">Custom Evolutionary Computation</a></li>
+<li><a class="reference internal" href="#custom-archiver">Custom Archiver</a></li>
+<li><a class="reference internal" href="#custom-observer">Custom Observer</a></li>
+<li><a class="reference internal" href="#custom-replacer">Custom Replacer</a></li>
+<li><a class="reference internal" href="#custom-selector">Custom Selector</a></li>
+<li><a class="reference internal" href="#custom-terminator">Custom Terminator</a></li>
+<li><a class="reference internal" href="#custom-variator">Custom Variator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advanced-usage">Advanced Usage</a><ul>
+<li><a class="reference internal" href="#discrete-optimization">Discrete Optimization</a><ul>
+<li><a class="reference internal" href="#the-traveling-salesman-problem">The Traveling Salesman Problem</a></li>
+<li><a class="reference internal" href="#the-knapsack-problem">The Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#evaluating-individuals-concurrently">Evaluating Individuals Concurrently</a><ul>
+<li><a class="reference internal" href="#the-multiprocessing-module">The <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> Module</a></li>
+<li><a class="reference internal" href="#id1">Parallel Python</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#island-models">Island Models</a></li>
+<li><a class="reference internal" href="#replacement-via-niching">Replacement via Niching</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="recipes.html"
+                        title="next chapter">Recipes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipes.html" title="Recipes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Inspired Intelligence Initiative.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
