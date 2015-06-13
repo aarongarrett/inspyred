@@ -116,8 +116,11 @@ def run_script(input_file, script_name, interpreter='python'):
     
 # Stuff run_script() into the builtins so we don't have to
 # import it in all of the cog blocks where we want to use it.
-__builtins__['run_script'] = run_script
-
+try:
+    __builtins__['run_script'] = run_script # Python 2
+except TypeError:
+    import builtins
+    builtins.run_script = run_script # Python 3
 
 def remake_directories(*dirnames):
     """Remove the directories and recreate them.
