@@ -24,17 +24,17 @@ def main(prng=None, display=False):
         print('Best Solutions: \n')
         for f in final_arc:
             print(f)
-        import pylab
+        import matplotlib.pyplot as plt
         x = []
         y = []
         for f in final_arc:
             x.append(f.fitness[0])
             y.append(f.fitness[1])
-        pylab.scatter(x, y, color='b')
-        pylab.savefig('{0} Example ({1}).pdf'.format(ea.__class__.__name__, 
+        plt.scatter(x, y, color='b')
+        plt.savefig('{0} Example ({1}).pdf'.format(ea.__class__.__name__, 
                                                      problem.__class__.__name__), 
                       format='pdf')
-        pylab.show()
+        plt.show()
     return ea
         
 if __name__ == '__main__':

@@ -333,22 +333,22 @@ def plot_observer(population, num_generations, num_evaluations, args):
     """Plot the output of the evolutionary computation as a graph.
     
     This function plots the performance of the EC as a line graph 
-    using the pylab library (matplotlib) and numpy. The graph consists of a 
-    blue line representing the best fitness, a green line representing
-    the average fitness, and a red line representing the median fitness.
+    using matplotlib and numpy. The graph consists of a blue line 
+    representing the best fitness, a green line representing the 
+    average fitness, and a red line representing the median fitness.
     It modifies the keyword arguments variable 'args' by including an
     entry called 'plot_data'.
     
     If this observer is used, the calling script should also import
-    the pylab library and should end the script with::
+    the matplotlib library and should end the script with::
     
-        pylab.show()
+        matplotlib.pyplot.show()
     
     Otherwise, the program may generate a runtime error.
     
     .. note::
     
-       This function makes use of the pylab and numpy libraries.
+       This function makes use of the matplotlib and numpy libraries.
     
     .. Arguments:
        population -- the population of Individuals
@@ -357,7 +357,7 @@ def plot_observer(population, num_generations, num_evaluations, args):
        args -- a dictionary of keyword arguments
     
     """
-    import pylab
+    import matplotlib.pyplot as plt
     import numpy
     
     stats = inspyred.ec.analysis.fitness_statistics(population)
@@ -369,18 +369,18 @@ def plot_observer(population, num_generations, num_evaluations, args):
     labels = ['average', 'median', 'best', 'worst']
     data = []
     if num_generations == 0:
-        pylab.ion()
+        plt.ion()
         data = [[num_evaluations], [average_fitness], [median_fitness], [best_fitness], [worst_fitness]]
         lines = []
         for i in range(4):
-            line, = pylab.plot(data[0], data[i+1], color=colors[i], label=labels[i])
+            line, = plt.plot(data[0], data[i+1], color=colors[i], label=labels[i])
             lines.append(line)
         # Add the legend when the first data is added.
-        pylab.legend(loc='lower right')
+        plt.legend(loc='lower right')
         args['plot_data'] = data
         args['plot_lines'] = lines
-        pylab.xlabel('Evaluations')
-        pylab.ylabel('Fitness')
+        plt.xlabel('Evaluations')
+        plt.ylabel('Fitness')
     else:
         data = args['plot_data']
         data[0].append(num_evaluations)
@@ -397,6 +397,6 @@ def plot_observer(population, num_generations, num_evaluations, args):
     ymin = min([min(d) for d in data[1:]])
     ymax = max([max(d) for d in data[1:]])
     yrange = ymax - ymin
-    pylab.xlim((0, num_evaluations))
-    pylab.ylim((ymin - 0.1*yrange, ymax + 0.1*yrange))
-    pylab.draw()
+    plt.xlim((0, num_evaluations))
+    plt.ylim((ymin - 0.1*yrange, ymax + 0.1*yrange))
+    plt.draw()

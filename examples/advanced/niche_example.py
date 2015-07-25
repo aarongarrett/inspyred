@@ -37,7 +37,7 @@ def main(prng=None, display=False):
                           distance_function=my_distance)
                           
     if display:
-        import pylab
+        import matplotlib.pyplot as plt
         x = []
         y = []
         for p in final_pop:
@@ -45,11 +45,11 @@ def main(prng=None, display=False):
             y.append(math.sin(p.candidate[0]))
         t = [(i / 1000.0) * 26.0 for i in range(1000)]
         s = [math.sin(a) for a in t]
-        pylab.plot(t, s, color='b')
-        pylab.scatter(x, y, color='r')
-        pylab.axis([0, 26, 0, 1.1])
-        pylab.savefig('niche_example.pdf', format='pdf')
-        pylab.show()
+        plt.plot(t, s, color='b')
+        plt.scatter(x, y, color='r')
+        plt.axis([0, 26, 0, 1.1])
+        plt.savefig('niche_example.pdf', format='pdf')
+        plt.show()
     return ea
 
 if __name__ == '__main__':

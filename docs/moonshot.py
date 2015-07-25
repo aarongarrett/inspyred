@@ -4,7 +4,6 @@
 #start_imports
 import os
 import math
-import pylab
 import itertools
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle
@@ -147,7 +146,7 @@ def moonshot(orbital_height, satellite_mass, boost_velocity, initial_y_velocity,
                       arrowprops=dict(arrowstyle="->"))
         x = [p[0] for p in position] 
         y = [p[1] for p in position]
-        cm = pylab.get_cmap('gist_rainbow')
+        cm = plt.get_cmap('gist_rainbow')
         lines = plt.scatter(x, y, c=range(len(x)), cmap=cm, marker='o', s=2)
         plt.setp(lines, edgecolors='None')  
         plt.axis("equal")

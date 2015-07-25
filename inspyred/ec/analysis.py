@@ -88,7 +88,7 @@ def generation_plot(file, errorbars=True):
     
     This function creates a plot of the generation fitness statistics 
     (best, worst, median, and average). This function requires the 
-    pylab and matplotlib libraries.
+    matplotlib library.
     
     .. note::
     
@@ -108,7 +108,7 @@ def generation_plot(file, errorbars=True):
       be drawn (default True)
 
     """
-    import pylab
+    import matplotlib.pyplot as plt
     import matplotlib.font_manager 
     
     generation = []
@@ -132,24 +132,24 @@ def generation_plot(file, errorbars=True):
     data = [average, median, best, worst]
     colors = ['black', 'blue', 'green', 'red']
     labels = ['average', 'median', 'best', 'worst']
-    figure = pylab.figure()
+    figure = plt.figure()
     if errorbars:
-        pylab.errorbar(generation, average, stderr, color=colors[0], label=labels[0])
+        plt.errorbar(generation, average, stderr, color=colors[0], label=labels[0])
     else:
-        pylab.plot(generation, average, color=colors[0], label=labels[0])
+        plt.plot(generation, average, color=colors[0], label=labels[0])
     for d, col, lab in zip(data[1:], colors[1:], labels[1:]):
-        pylab.plot(generation, d, color=col, label=lab)
-    pylab.fill_between(generation, data[2], data[3], color='#e6f2e6')
-    pylab.grid(True)
+        plt.plot(generation, d, color=col, label=lab)
+    plt.fill_between(generation, data[2], data[3], color='#e6f2e6')
+    plt.grid(True)
     ymin = min([min(d) for d in data])
     ymax = max([max(d) for d in data])
     yrange = ymax - ymin
-    pylab.ylim((ymin - 0.1*yrange, ymax + 0.1*yrange))  
+    plt.ylim((ymin - 0.1*yrange, ymax + 0.1*yrange))  
     prop = matplotlib.font_manager.FontProperties(size=8) 
-    pylab.legend(loc='upper left', prop=prop)    
-    pylab.xlabel('Generation')
-    pylab.ylabel('Fitness')
-    pylab.show()    
+    plt.legend(loc='upper left', prop=prop)    
+    plt.xlabel('Generation')
+    plt.ylabel('Fitness')
+    plt.show()    
 
     
 def allele_plot(file, normalize=False, alleles=None, generations=None):
@@ -161,7 +161,7 @@ def allele_plot(file, normalize=False, alleles=None, generations=None):
     individuals are chosen using the fitness data for each generation. The 
     average individual, on the other hand, is actually an individual created
     by averaging the alleles within a generation. This function requires the 
-    pylab library.
+    matplotlib library.
 
     .. note::
     
@@ -188,7 +188,7 @@ def allele_plot(file, normalize=False, alleles=None, generations=None):
     *generations* is ``None``, then all generations are plotted.
 
     """    
-    import pylab
+    import matplotlib.pyplot as plt
     
     generation_data = []
     reader = csv.reader(open(file))
@@ -245,23 +245,23 @@ def allele_plot(file, normalize=False, alleles=None, generations=None):
         plot_data = []
         for g in generations:
             plot_data.append([data[g][a] for a in alleles])
-        sub = pylab.subplot(3, 1, plot_num + 1)
-        pylab.pcolor(pylab.array(plot_data))
-        pylab.colorbar()
+        sub = plt.subplot(3, 1, plot_num + 1)
+        plt.pcolor(plt.array(plot_data))
+        plt.colorbar()
         step_size = max(len(generations) // 7, 1)
         ytick_locs = list(range(step_size, len(generations), step_size))
         ytick_labs = generations[step_size::step_size]
-        pylab.yticks(ytick_locs, ytick_labs)
-        pylab.ylabel('Generation')
+        plt.yticks(ytick_locs, ytick_labs)
+        plt.ylabel('Generation')
         if plot_num == 2:
             xtick_locs = list(range(len(alleles)))
             xtick_labs = alleles
-            pylab.xticks(xtick_locs, xtick_labs)
-            pylab.xlabel('Allele')
+            plt.xticks(xtick_locs, xtick_labs)
+            plt.xlabel('Allele')
         else:
-            pylab.setp(sub.get_xticklabels(), visible=False)
-        pylab.title(title)
-    pylab.show()
+            plt.setp(sub.get_xticklabels(), visible=False)
+        plt.title(title)
+    plt.show()
 
     
 def hypervolume(pareto_set, reference_point=None):
