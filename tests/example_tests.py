@@ -76,7 +76,7 @@ class PAES_Test(unittest.TestCase):
     def test(self):
         paes = examples.standard.paes_example.main(prng=prng)
         fitnesses = [a.fitness for a in paes.archive]
-        assert all([(-21 < f[0] < -12) and (-12 < f[1] < 1) for f in fitnesses])
+        assert all([(-21 < f[0] < -11) and (-12 < f[1] < 1) for f in fitnesses])
 
 class PSO_Test(unittest.TestCase):
     def test(self):
