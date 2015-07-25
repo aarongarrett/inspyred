@@ -10,7 +10,7 @@ def my_squaring_function(x):
 
 def generate_rastrigin(random, args):
     size = args.get('num_inputs', 10)
-    return [random.uniform(-5.12, 5.12) for i in xrange(size)]
+    return [random.uniform(-5.12, 5.12) for i in range(size)]
 
 def evaluate_rastrigin(candidates, args):
     fitness = []

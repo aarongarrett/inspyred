@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tutorial &mdash; inspyred 1.0 documentation</title>
+    <title>Tutorial &mdash; inspyred 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0',
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0.1 documentation" href="index.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,14 +44,14 @@
         <li class="right" >
           <a href="overview.html" title="Overview"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
@@ -80,9 +79,9 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
 </pre></div>
 </div>
-<p>First, we import all the necessary libraries. <tt class="docutils literal"><span class="pre">random</span></tt> and <tt class="docutils literal"><span class="pre">time</span></tt> are needed for the random number generation; <tt class="docutils literal"><span class="pre">math</span></tt> is needed for the evaluation function; and <tt class="docutils literal"><span class="pre">inspyred</span></tt> is, of course, needed for the evolutionary computation.</p>
-<p>This function must take the random number generator object along with the keyword arguments. Notice that we can use the <tt class="docutils literal"><span class="pre">args</span></tt> variable to pass anything we like to our functions. There is nothing special about the <tt class="docutils literal"><span class="pre">num_inputs</span></tt> key. But, as we&#8217;ll see, we can pass in that value as a keyword argument to the <tt class="docutils literal"><span class="pre">evolve</span></tt> method of our evolution strategy.</p>
-<p>This code is pretty straightforward. We&#8217;re simply generating a list of <tt class="docutils literal"><span class="pre">num_inputs</span></tt> uniform random values between -5.12 and 5.12. If <tt class="docutils literal"><span class="pre">num_inputs</span></tt> has not been specified, then we will default to generating 10 values.</p>
+<p>First, we import all the necessary libraries. <code class="docutils literal"><span class="pre">random</span></code> and <code class="docutils literal"><span class="pre">time</span></code> are needed for the random number generation; <code class="docutils literal"><span class="pre">math</span></code> is needed for the evaluation function; and <code class="docutils literal"><span class="pre">inspyred</span></code> is, of course, needed for the evolutionary computation.</p>
+<p>This function must take the random number generator object along with the keyword arguments. Notice that we can use the <code class="docutils literal"><span class="pre">args</span></code> variable to pass anything we like to our functions. There is nothing special about the <code class="docutils literal"><span class="pre">num_inputs</span></code> key. But, as we&#8217;ll see, we can pass in that value as a keyword argument to the <code class="docutils literal"><span class="pre">evolve</span></code> method of our evolution strategy.</p>
+<p>This code is pretty straightforward. We&#8217;re simply generating a list of <code class="docutils literal"><span class="pre">num_inputs</span></code> uniform random values between -5.12 and 5.12. If <code class="docutils literal"><span class="pre">num_inputs</span></code> has not been specified, then we will default to generating 10 values.</p>
 <p>And now we can tackle the evaluator...</p>
 </div>
 <div class="section" id="the-evaluator">
@@ -95,7 +94,7 @@
     <span class="k">return</span> <span class="n">fitness</span>
 </pre></div>
 </div>
-<p>This function takes an iterable object containing the candidates along with the keyword arguments. The function should perform the evaluation of each of the candidates and return an iterable object containing each fitness value in the same order as the candidates <a class="footnote-reference" href="#id3" id="id1">[1]</a>. The Rastrigin problem is one of minimization, so we&#8217;ll need to tell the evolution strategy that we are minimizing (by using <tt class="docutils literal"><span class="pre">maximize=False</span></tt> in the call to <tt class="docutils literal"><span class="pre">evolve</span></tt>).</p>
+<p>This function takes an iterable object containing the candidates along with the keyword arguments. The function should perform the evaluation of each of the candidates and return an iterable object containing each fitness value in the same order as the candidates <a class="footnote-reference" href="#id3" id="id1">[1]</a>. The Rastrigin problem is one of minimization, so we&#8217;ll need to tell the evolution strategy that we are minimizing (by using <code class="docutils literal"><span class="pre">maximize=False</span></code> in the call to <code class="docutils literal"><span class="pre">evolve</span></code>).</p>
 </div>
 <div class="section" id="the-evolutionary-computation">
 <h3>The Evolutionary Computation<a class="headerlink" href="#the-evolutionary-computation" title="Permalink to this headline">¶</a></h3>
@@ -117,16 +116,17 @@
 <span class="k">print</span><span class="p">(</span><span class="n">final_pop</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-python"><pre>$ python rastrigin.py
-[1.0591544744884256, -0.06931594194249761, 2.014420132288964, 2.4373871664313254, 0.9287429640850096, 1.4371661116043493] : 3.83332404535</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ python rastrigin.py
+[1.0591544744884256, -0.06931594194249761, 2.014420132288964, 2.4373871664313254, 0.9287429640850096, 1.4371661116043493] : 3.83332404535
+</pre></div>
 </div>
-<p>As can be seen, we first create our random number generator object, seeding it with the current system time. Then we construct our ES, specifying a terminator (that stops after a given number of function evaluations). Finally, we call the <tt class="docutils literal"><span class="pre">evolve</span></tt> method of the ES. To this method, we pass the generator, evaluator, the population size, a flag to denote that we&#8217;re minimizing in this problem (which defaults to <tt class="docutils literal"><span class="pre">maximize=True</span></tt> if unspecified), a bounding function to use for candidate solutions, and a set of keyword arguments that will be needed by one or more of the functions involved. For instance, we pass <tt class="docutils literal"><span class="pre">num_inputs</span></tt> to be used by our generator. Likewise, <tt class="docutils literal"><span class="pre">max_evaluations</span></tt> will be used by our terminator.</p>
-<p>The script outputs the best individual in the final generation, which will be located at index 0 after the final population is sorted. Since the random number generator was seeded with the current time, your particular output will be different when running this script from that presented here. You can <a class="reference download internal" href="_downloads/rastrigin.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
+<p>As can be seen, we first create our random number generator object, seeding it with the current system time. Then we construct our ES, specifying a terminator (that stops after a given number of function evaluations). Finally, we call the <code class="docutils literal"><span class="pre">evolve</span></code> method of the ES. To this method, we pass the generator, evaluator, the population size, a flag to denote that we&#8217;re minimizing in this problem (which defaults to <code class="docutils literal"><span class="pre">maximize=True</span></code> if unspecified), a bounding function to use for candidate solutions, and a set of keyword arguments that will be needed by one or more of the functions involved. For instance, we pass <code class="docutils literal"><span class="pre">num_inputs</span></code> to be used by our generator. Likewise, <code class="docutils literal"><span class="pre">max_evaluations</span></code> will be used by our terminator.</p>
+<p>The script outputs the best individual in the final generation, which will be located at index 0 after the final population is sorted. Since the random number generator was seeded with the current time, your particular output will be different when running this script from that presented here. You can <a class="reference download internal" href="_downloads/rastrigin.py"><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></code></a> to run it yourself.</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The evaluator was designed to evaluate all candidates, rather than a single candidate (with iteration happening inside the evolutionary computation), because this allows more complex evaluation functions that make use of the current set of individuals. Of course, such a function would also rely heavily on the choice of selector, as well. If no such elaborate mechanism is needed, then the decorator <tt class="docutils literal"><span class="pre">&#64;inspyred.ec.evaluators.evaluator</span></tt> can be used on an evaluation function that operates on a single candidate. See <a class="reference internal" href="reference.html"><em>the reference documentation</em></a> for more details.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The evaluator was designed to evaluate all candidates, rather than a single candidate (with iteration happening inside the evolutionary computation), because this allows more complex evaluation functions that make use of the current set of individuals. Of course, such a function would also rely heavily on the choice of selector, as well. If no such elaborate mechanism is needed, then the decorator <code class="docutils literal"><span class="pre">&#64;inspyred.ec.evaluators.evaluator</span></code> can be used on an evaluation function that operates on a single candidate. See <a class="reference internal" href="reference.html"><em>the reference documentation</em></a> for more details.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
@@ -156,7 +156,7 @@
 </pre></div>
 </div>
 <p>Once again, we import the necessary libraries. In this case, we&#8217;ll also need to tailor elements of the EC, as well as provide graphical output.</p>
-<p>After the libraries have been imported, we define our generator function. It looks for the keyword argument <tt class="docutils literal"><span class="pre">num_vertices</span></tt>, and it creates a list of <tt class="docutils literal"><span class="pre">num_vertices</span></tt> ordered pairs (tuples) where each coordinate is in the range [-1, 1].</p>
+<p>After the libraries have been imported, we define our generator function. It looks for the keyword argument <code class="docutils literal"><span class="pre">num_vertices</span></code>, and it creates a list of <code class="docutils literal"><span class="pre">num_vertices</span></code> ordered pairs (tuples) where each coordinate is in the range [-1, 1].</p>
 </div>
 <div class="section" id="id6">
 <h3>The Evaluator<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
@@ -176,7 +176,7 @@
     <span class="k">return</span> <span class="n">fitness</span>
 </pre></div>
 </div>
-<p>In order to evaluate the polygon, we need to calculate its area. The <tt class="docutils literal"><span class="pre">segments</span></tt> and <tt class="docutils literal"><span class="pre">area</span></tt> functions do this for us. (In case it&#8217;s not clear from the code, the <tt class="docutils literal"><span class="pre">segments</span></tt> function turns a list of coordinate pairs into a list of pairs of adjacent neighbors. For instance, <tt class="docutils literal"><span class="pre">[(1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)]</span></tt> would return <tt class="docutils literal"><span class="pre">[((1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4)),</span> <span class="pre">((3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)),</span> <span class="pre">((5,</span> <span class="pre">6),</span> <span class="pre">(1,</span> <span class="pre">2))]</span></tt>.) Therefore, the <tt class="docutils literal"><span class="pre">evaluate_polygon</span></tt> function simply needs to assign the fitness to be the value returned as the area.</p>
+<p>In order to evaluate the polygon, we need to calculate its area. The <code class="docutils literal"><span class="pre">segments</span></code> and <code class="docutils literal"><span class="pre">area</span></code> functions do this for us. (In case it&#8217;s not clear from the code, the <code class="docutils literal"><span class="pre">segments</span></code> function turns a list of coordinate pairs into a list of pairs of adjacent neighbors. For instance, <code class="docutils literal"><span class="pre">[(1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)]</span></code> would return <code class="docutils literal"><span class="pre">[((1,</span> <span class="pre">2),</span> <span class="pre">(3,</span> <span class="pre">4)),</span> <span class="pre">((3,</span> <span class="pre">4),</span> <span class="pre">(5,</span> <span class="pre">6)),</span> <span class="pre">((5,</span> <span class="pre">6),</span> <span class="pre">(1,</span> <span class="pre">2))]</span></code>.) Therefore, the <code class="docutils literal"><span class="pre">evaluate_polygon</span></code> function simply needs to assign the fitness to be the value returned as the area.</p>
 </div>
 <div class="section" id="the-bounder">
 <h3>The Bounder<a class="headerlink" href="#the-bounder" title="Permalink to this headline">¶</a></h3>
@@ -190,7 +190,7 @@
 <span class="n">bound_polygon</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Because our representation is a bit non-standard (a list of tuples), we need to create a bounding function that the EC can use to bound potential candidate solutions. Here, the bounding function is simple enough. It just make sure that each element of each tuple lies in the range [-1, 1]. The <tt class="docutils literal"><span class="pre">lower_bound</span></tt> and <tt class="docutils literal"><span class="pre">upper_bound</span></tt> attributes are added to the function so that the <tt class="docutils literal"><span class="pre">mutate_polygon</span></tt> function can make use of them without being hard-coded. While this is not strictly necessary, it does mimic the behavior of the <tt class="docutils literal"><span class="pre">Bounder</span></tt> callable class provided by inspyred.</p>
+<p>Because our representation is a bit non-standard (a list of tuples), we need to create a bounding function that the EC can use to bound potential candidate solutions. Here, the bounding function is simple enough. It just make sure that each element of each tuple lies in the range [-1, 1]. The <code class="docutils literal"><span class="pre">lower_bound</span></code> and <code class="docutils literal"><span class="pre">upper_bound</span></code> attributes are added to the function so that the <code class="docutils literal"><span class="pre">mutate_polygon</span></code> function can make use of them without being hard-coded. While this is not strictly necessary, it does mimic the behavior of the <code class="docutils literal"><span class="pre">Bounder</span></code> callable class provided by inspyred.</p>
 </div>
 <div class="section" id="the-observer">
 <h3>The Observer<a class="headerlink" href="#the-observer" title="Permalink to this headline">¶</a></h3>
@@ -225,7 +225,7 @@
     <span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Since we are evolving a two-dimensional shape, it makes sense to use a graphical approach to observing the current best polygon during each iteration. The <tt class="docutils literal"><span class="pre">polygon_observer</span></tt> accomplishes this by drawing the best polygon in the population to a Tk canvas. Notice that the canvas is passed in via the keyword arguments parameter <tt class="docutils literal"><span class="pre">args</span></tt>.</p>
+<p>Since we are evolving a two-dimensional shape, it makes sense to use a graphical approach to observing the current best polygon during each iteration. The <code class="docutils literal"><span class="pre">polygon_observer</span></code> accomplishes this by drawing the best polygon in the population to a Tk canvas. Notice that the canvas is passed in via the keyword arguments parameter <code class="docutils literal"><span class="pre">args</span></code>.</p>
 </div>
 <div class="section" id="id7">
 <h3>The Evolutionary Computation<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
@@ -274,7 +274,7 @@
 <span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This EC uses tournament selection, uniform crossover, our custom mutation operator, and steady-state replacement. We also set up the custom observer and create the canvas, which is passed into the <tt class="docutils literal"><span class="pre">evolve</span></tt> method as a keyword argument. You can <a class="reference download internal" href="_downloads/polyarea.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
+<p>This EC uses tournament selection, uniform crossover, our custom mutation operator, and steady-state replacement. We also set up the custom observer and create the canvas, which is passed into the <code class="docutils literal"><span class="pre">evolve</span></code> method as a keyword argument. You can <a class="reference download internal" href="_downloads/polyarea.py"><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></code></a> to run it yourself.</p>
 </div>
 </div>
 <div class="section" id="lunar-explorer">
@@ -284,7 +284,6 @@
 <h3>The Generator<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">pylab</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span>
@@ -441,7 +440,7 @@
                       <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s">&quot;-&gt;&quot;</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">position</span><span class="p">]</span> 
         <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">position</span><span class="p">]</span>
-        <span class="n">cm</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">&#39;gist_rainbow&#39;</span><span class="p">)</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">&#39;gist_rainbow&#39;</span><span class="p">)</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">)</span>  
         <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">&quot;equal&quot;</span><span class="p">)</span>
@@ -519,8 +518,8 @@
 </pre></div>
 </div>
 <p>The results, if plotted, will look similar to the figure below. Here, the color denotes the passage of time, from red to violet.
-You can <a class="reference download internal" href="_downloads/moonshot.py"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></tt></a> to run it yourself.</p>
-<img alt="Sample Results" class="align-center" src="_images/moonshot.jpg" style="width: 600px;" />
+You can <a class="reference download internal" href="_downloads/moonshot.py"><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">full</span> <span class="pre">example</span></code></a> to run it yourself.</p>
+<a class="reference internal image-reference" href="_images/moonshot.jpg"><img alt="Sample Results" class="align-center" src="_images/moonshot.jpg" style="width: 600px;" /></a>
 <table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -535,7 +534,7 @@ You can <a class="reference download internal" href="_downloads/moonshot.py"><tt
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -570,12 +569,14 @@ You can <a class="reference download internal" href="_downloads/moonshot.py"><tt
   <h4>Next topic</h4>
   <p class="topless"><a href="examples.html"
                         title="next chapter">Examples</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tutorial.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -592,7 +593,7 @@ You can <a class="reference download internal" href="_downloads/moonshot.py"><tt
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -607,12 +608,12 @@ You can <a class="reference download internal" href="_downloads/moonshot.py"><tt
         <li class="right" >
           <a href="overview.html" title="Overview"
              >previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Inspired Intelligence Initiative.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, Aaron Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

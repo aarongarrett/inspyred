@@ -72,7 +72,8 @@ pop = myec.evolve(my_generator, my_evaluator,
                   mutation_rate=0.5,
                   max_evaluations=2000)
                   
-import pylab
+import matplotlib.pyplot as plt
+import numpy
 x = []
 y = []
 c = []
@@ -89,7 +90,7 @@ for i, p in enumerate(pop):
     else:
         c.append(str(1 - feasible_count / float(num_feasible)))
         feasible_count += 1
-angles = pylab.linspace(0, 2*pylab.pi, 100)
-pylab.plot(pylab.cos(angles), pylab.sin(angles), color='b')
-pylab.scatter(x, y, color=c)
-pylab.savefig('constraint_example.pdf', format='pdf')
+angles = numpy.linspace(0, 2*numpy.pi, 100)
+plt.plot(numpy.cos(angles), numpy.sin(angles), color='b')
+plt.scatter(x, y, color=c)
+plt.savefig('constraint_example.pdf', format='pdf')

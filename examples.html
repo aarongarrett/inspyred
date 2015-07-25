@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; inspyred 1.0 documentation</title>
+    <title>Examples &mdash; inspyred 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0',
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0.1 documentation" href="index.html" />
     <link rel="next" title="Recipes" href="recipes.html" />
     <link rel="prev" title="Tutorial" href="tutorial.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,14 +44,14 @@
         <li class="right" >
           <a href="tutorial.html" title="Tutorial"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
@@ -69,7 +68,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="genetic-algorithm">
 <h3>Genetic Algorithm<a class="headerlink" href="#genetic-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>In this example, a GA is used to evolve a solution to the binary version of the Schwefel benchmark.
-[<a class="reference download internal" href="_downloads/ga_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/ga_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -104,7 +103,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="evolution-strategy">
 <h3>Evolution Strategy<a class="headerlink" href="#evolution-strategy" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an ES is used to evolve a solution to the Rosenbrock benchmark.
-[<a class="reference download internal" href="_downloads/es_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/es_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -138,7 +137,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="simulated-annealing">
 <h3>Simulated Annealing<a class="headerlink" href="#simulated-annealing" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an SA is used to evolve a solution to the Sphere benchmark.
-[<a class="reference download internal" href="_downloads/sa_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/sa_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -170,7 +169,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="differential-evolution-algorithm">
 <h3>Differential Evolution Algorithm<a class="headerlink" href="#differential-evolution-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>In this example, a DEA is used to evolve a solution to the Griewank benchmark.
-[<a class="reference download internal" href="_downloads/dea_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/dea_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -203,7 +202,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="estimation-of-distribution-algorithm">
 <h3>Estimation of Distribution Algorithm<a class="headerlink" href="#estimation-of-distribution-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an EDA is used to evolve a solution to the Rastrigin benchmark.
-[<a class="reference download internal" href="_downloads/eda_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/eda_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -239,7 +238,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="pareto-archived-evolution-strategy-paes">
 <h3>Pareto Archived Evolution Strategy (PAES)<a class="headerlink" href="#pareto-archived-evolution-strategy-paes" title="Permalink to this headline">¶</a></h3>
 <p>In this example, a PAES is used to evolve a solution to the Kursawe multiobjective benchmark.
-[<a class="reference download internal" href="_downloads/paes_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/paes_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -265,17 +264,17 @@ do not make use of a benchmark problem.</p>
         <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solutions: </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
             <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
                                                      <span class="n">problem</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span> 
                       <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">ea</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
@@ -286,7 +285,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="nondominated-sorting-genetic-algorithm-nsga-ii">
 <h3>Nondominated Sorting Genetic Algorithm (NSGA-II)<a class="headerlink" href="#nondominated-sorting-genetic-algorithm-nsga-ii" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an NSGA2 is used to evolve a solution to the Kursawe multiobjective benchmark.
-[<a class="reference download internal" href="_downloads/nsga_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/nsga_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -313,17 +312,17 @@ do not make use of a benchmark problem.</p>
         <span class="k">print</span><span class="p">(</span><span class="s">&#39;Best Solutions: </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">final_arc</span><span class="p">:</span>
             <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fitness</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;{0} Example ({1}).pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
                                                      <span class="n">problem</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span> 
                       <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">ea</span>
         
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
@@ -334,7 +333,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="particle-swarm-optimization">
 <h3>Particle Swarm Optimization<a class="headerlink" href="#particle-swarm-optimization" title="Permalink to this headline">¶</a></h3>
 <p>In this example, a PSO is used to evolve a solution to the Ackley benchmark.
-[<a class="reference download internal" href="_downloads/pso_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/pso_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -369,7 +368,7 @@ do not make use of a benchmark problem.</p>
 <div class="section" id="ant-colony-optimization">
 <h3>Ant Colony Optimization<a class="headerlink" href="#ant-colony-optimization" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an ACS is used to evolve a solution to the TSP benchmark.
-[<a class="reference download internal" href="_downloads/acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/acs_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -424,7 +423,7 @@ computation.</p>
 <h3>Custom Evolutionary Computation<a class="headerlink" href="#custom-evolutionary-computation" title="Permalink to this headline">¶</a></h3>
 <p>In this example, an evolutionary computation is created which uses tournament selection,
 uniform crossover, Gaussian mutation, and steady-state replacement.
-[<a class="reference download internal" href="_downloads/custom_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_ec_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -469,7 +468,7 @@ most multiobjective evolutionary approaches, but it can also be useful for singl
 problems, as well. In this example, an archiver is created that maintains the <em>worst</em>
 individual found. (There is no imaginable reason why one might actually do this. It
 is just for illustration purposes.)
-[<a class="reference download internal" href="_downloads/custom_archiver_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_archiver_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -513,7 +512,7 @@ is just for illustration purposes.)
 The purpose of the &#8220;observer&#8221; functions is to provide a function that executes at the
 end of each generation so that the process can be monitored accordingly. In this example,
 the only information desired at each generation is the current best individual.
-[<a class="reference download internal" href="_downloads/custom_observer_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_observer_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -549,7 +548,7 @@ the only information desired at each generation is the current best individual.
 should survive into the next generation. In this example, survivors are determined to be top 50% of
 individuals from the population along with 50% chosen randomly from the offspring. (Once again, this
 is simply an example. There may be no good reason to create such a replacement scheme.)
-[<a class="reference download internal" href="_downloads/custom_replacer_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_replacer_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -588,7 +587,7 @@ is simply an example. There may be no good reason to create such a replacement s
 In this example, parents are chosen such that 50% of the time the best individual in the population
 is chosen to be a parent and 50% of the time a random individual is chosen. As before, this is an
 example selector that may have little practical value.
-[<a class="reference download internal" href="_downloads/custom_selector_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_selector_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -630,7 +629,7 @@ example selector that may have little practical value.
 return a Boolean value where True implies that the evolution should end. In this example, the evolution
 should continue until the average Hamming distance between all combinations of candidates falls below
 a specified minimum.
-[<a class="reference download internal" href="_downloads/custom_terminator_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_terminator_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -672,9 +671,9 @@ a specified minimum.
 even more exotic variators can be defined. Remember that a list of variators can be specified
 that will act as a pipeline with the output of the first being used as the input to the second, etc.
 In this example, the binary candidate is mutated such that two points are chosen and the bits
-between each point are put in reverse order. For example, <tt class="docutils literal"><span class="pre">0010100100</span></tt> would become <tt class="docutils literal"><span class="pre">0010010100</span></tt>
+between each point are put in reverse order. For example, <code class="docutils literal"><span class="pre">0010100100</span></code> would become <code class="docutils literal"><span class="pre">0010010100</span></code>
 if the third and eighth bits are the chosen points.
-[<a class="reference download internal" href="_downloads/custom_variator_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/custom_variator_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -740,11 +739,11 @@ be found elsewhere.</p>
 <p>Candidate solutions for the TSP can be most easily be represented as permutations
 of the list of city numbers (enumerating the order in which cities should be
 visited). For instance, if there are 5 cities, then a candidate solution might
-be <tt class="docutils literal"><span class="pre">[4,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">2,</span> <span class="pre">3]</span></tt>. This is how the <tt class="docutils literal"><span class="pre">TSP</span></tt> benchmark represents solutions.
+be <code class="docutils literal"><span class="pre">[4,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>. This is how the <code class="docutils literal"><span class="pre">TSP</span></code> benchmark represents solutions.
 However, this simple representation forces us to work harder to ensure that our
 solutions remain feasible during crossover and mutation. Therefore, we need
 to use variators suited to the task, as shown in the example below.
-[<a class="reference download internal" href="_downloads/tsp_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/tsp_ec_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -792,7 +791,7 @@ to use variators suited to the task, as shown in the example below.
 </div>
 <p>As an alternative, we can use ant colony optimization to solve the TSP. This
 example was shown previously, but it is presented again here for completeness.
-[<a class="reference download internal" href="_downloads/acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/acs_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -842,12 +841,12 @@ list (for the 0/1 Knapsack) or as a list of non-negative integers (for the Knaps
 with duplicates). In each case, the list is the same length as the number of items,
 and each element of the list corresponds to the quantity of the corresponding item
 to place in the knapsack. For the evolutionary computation, we can use
-<tt class="docutils literal"><span class="pre">uniform_crossover</span></tt> <em>and</em> <tt class="docutils literal"><span class="pre">gaussian_mutation</span></tt>. The reason we are able to use
+<code class="docutils literal"><span class="pre">uniform_crossover</span></code> <em>and</em> <code class="docutils literal"><span class="pre">gaussian_mutation</span></code>. The reason we are able to use
 Gaussian mutation here, even though the candidates are composed of discrete values,
-is because the bounder created by the <tt class="docutils literal"><span class="pre">Knapsack</span></tt> benchmark is an instance of
-<tt class="docutils literal"><span class="pre">DiscreteBounder</span></tt>, which automatically moves an illegal component to its nearest
+is because the bounder created by the <code class="docutils literal"><span class="pre">Knapsack</span></code> benchmark is an instance of
+<code class="docutils literal"><span class="pre">DiscreteBounder</span></code>, which automatically moves an illegal component to its nearest
 legal value.
-[<a class="reference download internal" href="_downloads/knapsack_ec_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/knapsack_ec_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -893,8 +892,8 @@ legal value.
 </pre></div>
 </div>
 <p>Once again, as an alternative we can use ant colony optimization. Just for variety,
-we&#8217;ll use it to solve the 0/1 Knapsack problem (<tt class="docutils literal"><span class="pre">duplicates=False</span></tt>).
-[<a class="reference download internal" href="_downloads/knapsack_acs_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+we&#8217;ll use it to solve the 0/1 Knapsack problem (<code class="docutils literal"><span class="pre">duplicates=False</span></code>).
+[<a class="reference download internal" href="_downloads/knapsack_acs_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -939,21 +938,21 @@ we&#8217;ll use it to solve the 0/1 Knapsack problem (<tt class="docutils litera
 inherent parallelism. Taking advantage of this parallelism is important in
 real-world problems, which are often computationally expensive. There are
 two approaches available in inspyred to perform parallel evaluations for
-candidate solutions. The first makes use of the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> module
+candidate solutions. The first makes use of the <code class="docutils literal"><span class="pre">multiprocessing</span></code> module
 that exists in core Python 2.6+. The second makes use of a third-party
 library called <a class="reference external" href="http://www.parallelpython.com">Parallel Python</a> (pp),
 which can be used for either multi-core processing on a single machine or
 distributed processing across a network.</p>
 <div class="section" id="the-multiprocessing-module">
-<h4>The <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> Module<a class="headerlink" href="#the-multiprocessing-module" title="Permalink to this headline">¶</a></h4>
-<p>Using the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> approach to parallel evaluations is probably
+<h4>The <code class="docutils literal"><span class="pre">multiprocessing</span></code> Module<a class="headerlink" href="#the-multiprocessing-module" title="Permalink to this headline">¶</a></h4>
+<p>Using the <code class="docutils literal"><span class="pre">multiprocessing</span></code> approach to parallel evaluations is probably
 the better choice if all evaluations are going to be split among multiple
 processors or cores on a single machine. This is because the module is part
 of the core Python library (2.6+) and provides a simple, standard interface
 for setting up the parallelism. As shown in the example below, the only
 additional parameter is the name of the &#8220;actual&#8221; evaluation function and
 the (optional) number of CPUs to use.
-[<a class="reference download internal" href="_downloads/parallel_evaluation_mp_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/parallel_evaluation_mp_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -961,7 +960,7 @@ the (optional) number of CPUs to use.
 
 <span class="k">def</span> <span class="nf">generate_rastrigin</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_inputs&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
 
 <span class="k">def</span> <span class="nf">evaluate_rastrigin</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
     <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
@@ -984,7 +983,7 @@ the (optional) number of CPUs to use.
     <span class="n">final_pop</span> <span class="o">=</span> <span class="n">ea</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generate_rastrigin</span><span class="p">,</span> 
                           <span class="n">evaluator</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">evaluators</span><span class="o">.</span><span class="n">parallel_evaluation_mp</span><span class="p">,</span>
                           <span class="n">mp_evaluator</span><span class="o">=</span><span class="n">evaluate_rastrigin</span><span class="p">,</span> 
-                          <span class="n">mp_num_cpus</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                          <span class="n">mp_nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
                           <span class="n">pop_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> 
                           <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
                           <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
@@ -1007,11 +1006,11 @@ the (optional) number of CPUs to use.
 a network of computers (though it <em>can</em> be used on a single machine, as well).
 It takes just a little effort to install and setup pp
 on each machine, but once it&#8217;s complete, the network becomes a very efficient
-computing cluster. This is a capability that the <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> approach
+computing cluster. This is a capability that the <code class="docutils literal"><span class="pre">multiprocessing</span></code> approach
 simply does not have, and it provides incredible scalability. However, pp
 requires additional, non-standard parameters to be passed in, as illustrated
 in the example below.
-[<a class="reference download internal" href="_downloads/parallel_evaluation_pp_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/parallel_evaluation_pp_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">inspyred</span>
@@ -1024,7 +1023,7 @@ in the example below.
 
 <span class="k">def</span> <span class="nf">generate_rastrigin</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_inputs&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
 
 <span class="k">def</span> <span class="nf">evaluate_rastrigin</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
     <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1073,9 +1072,9 @@ different populations that evolve independently but are capable of sharing
 solutions among themselves. Such approaches are known as &#8220;island models&#8221; and
 can be accomplished within inspyred by making use of the migrator callback.
 The following example illustrates a very simple two-island model using the
-<tt class="docutils literal"><span class="pre">inspyred.ec.migrators.MultiprocessingMigrator</span></tt> migrator. Remember that
+<code class="docutils literal"><span class="pre">inspyred.ec.migrators.MultiprocessingMigrator</span></code> migrator. Remember that
 custom migrators can easily be constructed for more specific needs.
-[<a class="reference download internal" href="_downloads/islands_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/islands_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
@@ -1123,15 +1122,15 @@ custom migrators can easily be constructed for more specific needs.
 </div>
 <div class="section" id="replacement-via-niching">
 <h3>Replacement via Niching<a class="headerlink" href="#replacement-via-niching" title="Permalink to this headline">¶</a></h3>
-<p>An example of a not-quite-standard replacer is the <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> which
+<p>An example of a not-quite-standard replacer is the <code class="docutils literal"><span class="pre">crowding_replacement</span></code> which
 provides a niching capability. An example using this replacer is given below. Here,
 the candidates are just single numbers (but created as singleton lists so as to
-be <tt class="docutils literal"><span class="pre">Sequence</span></tt> types for some of the built-in operators) between 0 and 26. Their
+be <code class="docutils literal"><span class="pre">Sequence</span></code> types for some of the built-in operators) between 0 and 26. Their
 fitness values are simply the value of the sine function using the candidate value
 as input. Since the sine function is periodic and goes through four periods between
-0 and 26, this function is multimodal. So we can use <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> to
+0 and 26, this function is multimodal. So we can use <code class="docutils literal"><span class="pre">crowding_replacement</span></code> to
 ensure that all maxima are found.
-[<a class="reference download internal" href="_downloads/niche_example.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/niche_example.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -1171,7 +1170,7 @@ ensure that all maxima are found.
                           <span class="n">distance_function</span><span class="o">=</span><span class="n">my_distance</span><span class="p">)</span>
                           
     <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">pylab</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">final_pop</span><span class="p">:</span>
@@ -1179,11 +1178,11 @@ ensure that all maxima are found.
             <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">t</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">26.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
         <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;niche_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
-        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;niche_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">ea</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
@@ -1198,7 +1197,7 @@ ensure that all maxima are found.
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -1232,7 +1231,7 @@ ensure that all maxima are found.
 </ul>
 </li>
 <li><a class="reference internal" href="#evaluating-individuals-concurrently">Evaluating Individuals Concurrently</a><ul>
-<li><a class="reference internal" href="#the-multiprocessing-module">The <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> Module</a></li>
+<li><a class="reference internal" href="#the-multiprocessing-module">The <code class="docutils literal"><span class="pre">multiprocessing</span></code> Module</a></li>
 <li><a class="reference internal" href="#id1">Parallel Python</a></li>
 </ul>
 </li>
@@ -1250,12 +1249,14 @@ ensure that all maxima are found.
   <h4>Next topic</h4>
   <p class="topless"><a href="recipes.html"
                         title="next chapter">Recipes</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/examples.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -1272,7 +1273,7 @@ ensure that all maxima are found.
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1287,12 +1288,12 @@ ensure that all maxima are found.
         <li class="right" >
           <a href="tutorial.html" title="Tutorial"
              >previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Inspired Intelligence Initiative.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, Aaron Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

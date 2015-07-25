@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Overview &mdash; inspyred 1.0 documentation</title>
+    <title>Overview &mdash; inspyred 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0',
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0.1 documentation" href="index.html" />
     <link rel="next" title="Tutorial" href="tutorial.html" />
     <link rel="prev" title="inspyred: Bio-inspired Algorithms in Python" href="index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,14 +44,14 @@
         <li class="right" >
           <a href="index.html" title="inspyred: Bio-inspired Algorithms in Python"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
@@ -79,13 +78,13 @@
 <li>A selector that determines which individuals should become parents</li>
 <li>A variator that determines how offspring are created from existing individuals</li>
 <li>A replacer that determines which individuals should survive into the next generation</li>
-<li>A migrator that defines how solutions are transferred among differnt populations</li>
+<li>A migrator that defines how solutions are transferred among different populations</li>
 <li>An archiver that defines how existing solutions are stored outside of the current population</li>
 </ul>
 </li>
 </ul>
-<p>Each of these components is specified by a function (or function-like) callback that the user can supply. The general flow of the <tt class="docutils literal"><span class="pre">evolve</span></tt> method in inspyred is as follows, where user-supplied callback functions are in ALL-CAPS:</p>
-<div class="highlight-python"><pre>Create the initial population using the specified candidate seeds and the GENERATOR
+<p>Each of these components is specified by a function (or function-like) callback that the user can supply. The general flow of the <code class="docutils literal"><span class="pre">evolve</span></code> method in inspyred is as follows, where user-supplied callback functions are in ALL-CAPS:</p>
+<div class="highlight-python"><div class="highlight"><pre>Create the initial population using the specified candidate seeds and the GENERATOR
 Evaluate the initial population using the EVALUATOR
 Set the number of evaluations to the size of the initial population
 Set the number of generations to 0
@@ -101,7 +100,8 @@ While the TERMINATOR is not true Loop
     Migrate individuals in the current population using the MIGRATOR
     Archive individuals in the current population using the ARCHIVER
     Increment the number of generations
-    Call the OBSERVER on the current population</pre>
+    Call the OBSERVER on the current population
+</pre></div>
 </div>
 <p>The observer, terminator, and variator callbacks may be lists or tuples of functions, rather
 than just a single function. In each case, the functions are called sequentially in the order
@@ -111,7 +111,8 @@ from one call is used as the input for the subsequent call.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to install inspyred is to use <a class="reference external" href="http://www.pip-installer.org/en/latest/index.html">pip</a> as follows:</p>
-<div class="highlight-python"><pre>pip install inspyred</pre>
+<div class="highlight-python"><div class="highlight"><pre>pip install inspyred
+</pre></div>
 </div>
 <p>The Python Package Index page for inspyred is <a class="reference external" href="http://pypi.python.org/pypi/inspyred">http://pypi.python.org/pypi/inspyred</a>.</p>
 <p>The source code git repository can be found at <a class="reference external" href="https://github.com/inspyred/inspyred">https://github.com/inspyred/inspyred</a>.</p>
@@ -129,7 +130,7 @@ Please let us know how you&#8217;re using the library and any ideas you might ha
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -148,12 +149,14 @@ Please let us know how you&#8217;re using the library and any ideas you might ha
   <h4>Next topic</h4>
   <p class="topless"><a href="tutorial.html"
                         title="next chapter">Tutorial</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/overview.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/overview.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -170,7 +173,7 @@ Please let us know how you&#8217;re using the library and any ideas you might ha
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -185,12 +188,12 @@ Please let us know how you&#8217;re using the library and any ideas you might ha
         <li class="right" >
           <a href="index.html" title="inspyred: Bio-inspired Algorithms in Python"
              >previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Inspired Intelligence Initiative.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, Aaron Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

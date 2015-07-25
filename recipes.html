@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Recipes &mdash; inspyred 1.0 documentation</title>
+    <title>Recipes &mdash; inspyred 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0',
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="inspyred 1.0 documentation" href="index.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="inspyred 1.0.1 documentation" href="index.html" />
     <link rel="next" title="Library Reference" href="reference.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,14 +44,14 @@
         <li class="right" >
           <a href="examples.html" title="Examples"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="recipes">
 <h1>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h1>
@@ -72,8 +71,8 @@ for <em>x</em> is &#8220;better&#8221; (i.e., lower when minimizing or higher wh
 <em>y</em>, then <em>x</em> is considered &#8220;better&#8221; than <em>y</em>. If they are equal in that objective, then the second
 objective is considered in the same way. This process is repeated for all objectives.</p>
 <p>The following recipe provides a class to deal with such comparisons that is intended to function much like
-the <tt class="docutils literal"><span class="pre">inspyred.ec.emo.Pareto</span></tt> class.
-[<a class="reference download internal" href="_downloads/lexicographic.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+the <code class="docutils literal"><span class="pre">inspyred.ec.emo.Pareto</span></code> class.
+[<a class="reference download internal" href="_downloads/lexicographic.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="nd">@functools.total_ordering</span>
@@ -164,9 +163,9 @@ the <tt class="docutils literal"><span class="pre">inspyred.ec.emo.Pareto</span>
 provides one example of how to handle such a thing with inspyred. Here, candidates represent ordered pairs
 and their fitness is simply their distance from the origin. However, we provide a constraint that punishes
 candidates that lie outside of the unit circle. Such a scenario should produce a candidate that lies on the
-unit circle. Note also that <tt class="docutils literal"><span class="pre">crowding_replacement</span></tt> or some other fitness sharing or niching scheme could
+unit circle. Note also that <code class="docutils literal"><span class="pre">crowding_replacement</span></code> or some other fitness sharing or niching scheme could
 be used to generate many such points on the circle.
-[<a class="reference download internal" href="_downloads/constraint_selection.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/constraint_selection.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">inspyred</span> <span class="kn">import</span> <span class="n">ec</span>
 <span class="kn">from</span> <span class="nn">inspyred.ec</span> <span class="kn">import</span> <span class="n">variators</span>
@@ -241,7 +240,8 @@ be used to generate many such points on the circle.
                   <span class="n">mutation_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                   <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
                   
-<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
@@ -258,10 +258,10 @@ be used to generate many such points on the circle.
     <span class="k">else</span><span class="p">:</span>
         <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">feasible_count</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">num_feasible</span><span class="p">)))</span>
         <span class="n">feasible_count</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="n">angles</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">pylab</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pylab</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">pylab</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-<span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
-<span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;constraint_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;constraint_example.pdf&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -270,7 +270,7 @@ be used to generate many such points on the circle.
 <p>The following recipe shows how an evolutionary computation can be used to evolve near-optimal operators and
 parameters for another evolutionary computation. In the EC literature, such a thing is generally referred
 to as a &#8220;meta-EC&#8221;.
-[<a class="reference download internal" href="_downloads/meta_ec.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/meta_ec.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">random</span>
@@ -505,107 +505,107 @@ to as a &#8220;meta-EC&#8221;.
 for small numbers of evaluations in succession. Each succeeding EC is seeded with the best solution from the
 previous run. This is somewhat akin to a random-restart hill-climbing approach, except that information about the
 best solution so far is passed along during each restart.
-[<a class="reference download internal" href="_downloads/micro_ec.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">inspyred</span>
+[<a class="reference download internal" href="_downloads/micro_ec.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
+<div class="highlight-python"><div class="highlight"><pre>import collections
+import inspyred
 
-<span class="k">class</span> <span class="nc">MicroEC</span><span class="p">(</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">):</span>
-        <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random</span><span class="p">)</span>
+class MicroEC(inspyred.ec.EvolutionaryComputation):
+    def __init__(self, random):
+        inspyred.ec.EvolutionaryComputation.__init__(self, random)
         
-    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bounder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">[</span><span class="s">&#39;_ec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+    def evolve(self, generator, evaluator, pop_size=10, seeds=None, maximize=True, bounder=None, **args):
+        self._kwargs = args
+        self._kwargs[&#39;_ec&#39;] = self
         
-        <span class="k">if</span> <span class="n">seeds</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">seeds</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">bounder</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">bounder</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">()</span>
+        if seeds is None:
+            seeds = []
+        if bounder is None:
+            bounder = inspyred.ec.Bounder()
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">termination_cause</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">generator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">evaluator</span> <span class="o">=</span> <span class="n">evaluator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bounder</span> <span class="o">=</span> <span class="n">bounder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span> <span class="o">=</span> <span class="n">maximize</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">microseeds</span> <span class="o">=</span> <span class="n">seeds</span>
+        self.termination_cause = None
+        self.generator = generator
+        self.evaluator = evaluator
+        self.bounder = bounder
+        self.maximize = maximize
+        self.population = []
+        self.archive = []
+        microseeds = seeds
         
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_terminate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">):</span>
-            <span class="n">microec</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">EvolutionaryComputation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">)</span>
-            <span class="n">microec</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span>
-            <span class="n">microec</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variator</span>
-            <span class="n">microec</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacer</span>
-            <span class="n">microec</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span>
-            <span class="n">microec</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
-            <span class="n">maxevals</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span>
-            <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s">&#39;micro_evaluations&#39;</span><span class="p">]</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">microec</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span> <span class="n">evaluator</span><span class="o">=</span><span class="n">evaluator</span><span class="p">,</span> 
-                                    <span class="n">pop_size</span><span class="o">=</span><span class="n">pop_size</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="n">microseeds</span><span class="p">,</span> 
-                                    <span class="n">maximize</span><span class="o">=</span><span class="n">maximize</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-            <span class="n">args</span><span class="p">[</span><span class="s">&#39;max_evaluations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxevals</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="n">microseeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">candidate</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span> <span class="o">+=</span> <span class="n">microec</span><span class="o">.</span><span class="n">num_evaluations</span>
+        while not self._should_terminate(list(self.population), self.num_generations, self.num_evaluations):
+            microec = inspyred.ec.EvolutionaryComputation(self._random)
+            microec.selector = self.selector
+            microec.variator = self.variator
+            microec.replacer = self.replacer
+            microec.observer = self.observer
+            microec.terminator = inspyred.ec.terminators.evaluation_termination
+            maxevals = args[&#39;max_evaluations&#39;]
+            args[&#39;max_evaluations&#39;] = args[&#39;micro_evaluations&#39;]
+            result = microec.evolve(generator=generator, evaluator=evaluator, 
+                                    pop_size=pop_size, seeds=microseeds, 
+                                    maximize=maximize, **args)
+            self.population = list(result)
+            args[&#39;max_evaluations&#39;] = maxevals
+            result.sort(reverse=True)
+            microseeds = [result[0].candidate]
+            self.num_evaluations += microec.num_evaluations
 
-            <span class="c"># Migrate individuals.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migrator</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">,</span> 
-                                            <span class="n">population</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> 
-                                            <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+            # Migrate individuals.
+            self.population = self.migrator(random=self._random, 
+                                            population=self.population, 
+                                            args=self._kwargs)
             
-            <span class="c"># Archive individuals.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">archiver</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random</span><span class="p">,</span> <span class="n">archive</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="p">,</span> 
-                                         <span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+            # Archive individuals.
+            self.archive = self.archiver(random=self._random, archive=self.archive, 
+                                         population=list(self.population), args=self._kwargs)
             
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span> <span class="o">+=</span> <span class="n">microec</span><span class="o">.</span><span class="n">num_generations</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">:</span>
-                    <span class="n">obs</span><span class="p">(</span><span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">num_generations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> 
-                        <span class="n">num_evaluations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">(</span><span class="n">population</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">),</span> <span class="n">num_generations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_generations</span><span class="p">,</span> 
-                              <span class="n">num_evaluations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+            self.num_generations += microec.num_generations
+            if isinstance(self.observer, collections.Iterable):
+                for obs in self.observer:
+                    obs(population=list(self.population), num_generations=self.num_generations, 
+                        num_evaluations=self.num_evaluations, args=self._kwargs)
+            else:
+                self.observer(population=list(self.population), num_generations=self.num_generations, 
+                              num_evaluations=self.num_evaluations, args=self._kwargs)
+        return self.population
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">random</span>
-    <span class="kn">import</span> <span class="nn">math</span>
-    <span class="kn">import</span> <span class="nn">time</span>
+if __name__ == &#39;__main__&#39;:
+    import random
+    import math
+    import time
 
-    <span class="k">def</span> <span class="nf">rastrigin_generator</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+    def rastrigin_generator(random, args):
+        return [random.uniform(-5.12, 5.12) for _ in range(2)]
 
-    <span class="k">def</span> <span class="nf">rastrigin_evaluator</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
-            <span class="n">fitness</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cand</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">fitness</span>
+    def rastrigin_evaluator(candidates, args):
+        fitness = []
+        for cand in candidates:
+            fitness.append(10 * len(cand) + sum([x**2 - 10 * (math.cos(2*math.pi*x)) for x in cand]))
+        return fitness
         
-    <span class="n">prng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
-    <span class="n">prng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-    <span class="n">micro</span> <span class="o">=</span> <span class="n">MicroEC</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">selectors</span><span class="o">.</span><span class="n">tournament_selection</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">replacer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">replacers</span><span class="o">.</span><span class="n">steady_state_replacement</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">variator</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">uniform_crossover</span><span class="p">,</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">variators</span><span class="o">.</span><span class="n">gaussian_mutation</span><span class="p">]</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">archiver</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">archivers</span><span class="o">.</span><span class="n">best_archiver</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">observers</span><span class="o">.</span><span class="n">stats_observer</span>
-    <span class="n">micro</span><span class="o">.</span><span class="n">terminator</span> <span class="o">=</span> <span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">terminators</span><span class="o">.</span><span class="n">evaluation_termination</span>
-    <span class="n">final_pop</span> <span class="o">=</span> <span class="n">micro</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">rastrigin_generator</span><span class="p">,</span> 
-                             <span class="n">rastrigin_evaluator</span><span class="p">,</span> 
-                             <span class="n">pop_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
-                             <span class="n">maximize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
-                             <span class="n">bounder</span><span class="o">=</span><span class="n">inspyred</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">Bounder</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">),</span>
-                             <span class="n">max_evaluations</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
-                             <span class="n">micro_evaluations</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-                             <span class="n">num_selected</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
-                             <span class="n">gaussian_stdev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    prng = random.Random()
+    prng.seed(time.time())
+    micro = MicroEC(prng)
+    micro.selector = inspyred.ec.selectors.tournament_selection
+    micro.replacer = inspyred.ec.replacers.steady_state_replacement
+    micro.variator = [inspyred.ec.variators.uniform_crossover, inspyred.ec.variators.gaussian_mutation]
+    micro.archiver = inspyred.ec.archivers.best_archiver
+    micro.observer = inspyred.ec.observers.stats_observer
+    micro.terminator = inspyred.ec.terminators.evaluation_termination
+    final_pop = micro.evolve(rastrigin_generator, 
+                             rastrigin_evaluator, 
+                             pop_size=10, 
+                             maximize=False, 
+                             bounder=inspyred.ec.Bounder(-5.12, 5.12),
+                             max_evaluations=3000,
+                             micro_evaluations=300,
+                             num_selected=2, 
+                             gaussian_stdev=0.1)
                              
-    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Actual evaluations: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">micro</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">))</span>
+    print(&#39;Actual evaluations: {0}&#39;.format(micro.num_evaluations))
 
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">micro</span><span class="o">.</span><span class="n">archive</span><span class="p">:</span>
-        <span class="k">print</span> <span class="n">p</span>
+    for p in micro.archive:
+        print p
 </pre></div>
 </div>
 </div>
@@ -614,7 +614,7 @@ best solution so far is passed along during each restart.
 <p>The following custom migrator is a callable class (because the migrator must behave like a callback function)
 that allows solutions to migrate from one network machine to another. It is assumed that the EC islands are
 running on the given IP:port combinations.
-[<a class="reference download internal" href="_downloads/network_migrator.py"><tt class="xref download docutils literal"><span class="pre">download</span></tt></a>]</p>
+[<a class="reference download internal" href="_downloads/network_migrator.py"><code class="xref download docutils literal"><span class="pre">download</span></code></a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
@@ -751,7 +751,7 @@ running on the given IP:port combinations.
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -771,12 +771,14 @@ running on the given IP:port combinations.
   <h4>Next topic</h4>
   <p class="topless"><a href="reference.html"
                         title="next chapter">Library Reference</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/recipes.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/recipes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -793,7 +795,7 @@ running on the given IP:port combinations.
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -808,12 +810,12 @@ running on the given IP:port combinations.
         <li class="right" >
           <a href="examples.html" title="Examples"
              >previous</a> |</li>
-        <li><a href="index.html">inspyred 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">inspyred 1.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Inspired Intelligence Initiative.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, Aaron Garrett.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

@@ -5,7 +5,7 @@ import math
 
 def generate_rastrigin(random, args):
     size = args.get('num_inputs', 10)
-    return [random.uniform(-5.12, 5.12) for i in xrange(size)]
+    return [random.uniform(-5.12, 5.12) for i in range(size)]
 
 def evaluate_rastrigin(candidates, args):
     fitness = []
@@ -28,7 +28,7 @@ def main(prng=None, display=False):
     final_pop = ea.evolve(generator=generate_rastrigin, 
                           evaluator=inspyred.ec.evaluators.parallel_evaluation_mp,
                           mp_evaluator=evaluate_rastrigin, 
-                          mp_num_cpus=8,
+                          mp_nprocs=8,
                           pop_size=8, 
                           bounder=inspyred.ec.Bounder(-5.12, 5.12),
                           maximize=False,
