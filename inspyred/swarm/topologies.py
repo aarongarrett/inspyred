@@ -24,7 +24,7 @@
     written as generators that yield each neighborhood list one at a 
     time. This is how the existing topology functions operate.
 
-    .. Copyright 2012 Inspired Intelligence Initiative
+    .. Copyright 2012 Aaron Garrett
 
     .. This program is free software: you can redistribute it and/or modify
        it under the terms of the GNU General Public License as published by

@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'inspyred'
-copyright = u'2012, Inspired Intelligence Initiative'
+copyright = u'2012, Aaron Garrett'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
