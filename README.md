@@ -5,7 +5,7 @@ inspyred is a free, open source framework for creating biologically-inspired
 computational intelligence algorithms in Python, including evolutionary 
 computation, swarm intelligence, and immunocomputing. Additionally, inspyred 
 provides easy-to-use canonical versions of many bio-inspired algorithms for 
-users who don't need much customization.
+users who do not need much customization.
 
 
 Example
@@ -55,9 +55,8 @@ Requirements
 License
 =======
 
-This package is distributed under the GNU General Public License 
-version 3.0 (GPLv3). This license can be found online at
-http://www.opensource.org/licenses/gpl-3.0.html.
+This package is distributed under the MIT License. This license can be found 
+online at http://www.opensource.org/licenses/MIT.
   
 
 Resources
