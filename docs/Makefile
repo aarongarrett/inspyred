@@ -60,9 +60,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in _build/qthelp, like this:"
-	@echo "# qcollectiongenerator _build/qthelp/ecspy.qhcp"
+	@echo "# qcollectiongenerator _build/qthelp/inspyred.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile _build/qthelp/ecspy.qhc"
+	@echo "# assistant -collectionFile _build/qthelp/inspyred.qhc"
 
 latex:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) _build/latex

@@ -51,13 +51,13 @@ def mutator(mutate):
     
     """
     @functools.wraps(mutate)
-    def ecspy_mutator(random, candidates, args):
+    def inspyred_mutator(random, candidates, args):
         mutants = []
         for i, cs in enumerate(candidates):
             mutants.append(mutate(random, cs, args))
         return mutants
-    ecspy_mutator.single_mutation = mutate
-    return ecspy_mutator
+    inspyred_mutator.single_mutation = mutate
+    return inspyred_mutator
     
 
 @mutator

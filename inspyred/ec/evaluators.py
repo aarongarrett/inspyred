@@ -63,13 +63,13 @@ def evaluator(evaluate):
     
     """
     @functools.wraps(evaluate)
-    def ecspy_evaluator(candidates, args):
+    def inspyred_evaluator(candidates, args):
         fitness = []
         for candidate in candidates:
             fitness.append(evaluate(candidate, args))
         return fitness
-    ecspy_evaluator.single_evaluation = evaluate
-    return ecspy_evaluator
+    inspyred_evaluator.single_evaluation = evaluate
+    return inspyred_evaluator
     
 
 def parallel_evaluation_pp(candidates, args):

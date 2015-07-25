@@ -62,7 +62,7 @@ def crossover(cross):
 
     """
     @functools.wraps(cross)
-    def ecspy_crossover(random, candidates, args):
+    def inspyred_crossover(random, candidates, args):
         if len(candidates) % 2 == 1:
             candidates = candidates[:-1]
         moms = candidates[::2]
@@ -74,8 +74,8 @@ def crossover(cross):
             for o in offspring:
                 children.append(o)
         return children
-    ecspy_crossover.single_crossover = cross
-    return ecspy_crossover
+    inspyred_crossover.single_crossover = cross
+    return inspyred_crossover
 
 
 @crossover
