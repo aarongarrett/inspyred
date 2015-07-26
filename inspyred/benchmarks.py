@@ -23,6 +23,7 @@
     .. module:: benchmarks
     .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
 """
+import warnings
 import copy
 from inspyred import ec
 from inspyred.ec import emo
@@ -699,7 +700,16 @@ class DTLZ4(Benchmark):
 
 class DTLZ5(Benchmark):
     """Defines the DTLZ5 multiobjective benchmark problem.
-    
+
+    .. warning::
+
+        For 4 or more objectives the Global Optimum Pareto set is not fully
+        defined by the global_optimum function.
+        Huband, Simon, et al.
+        "A review of multiobjective test problems and a scalable test problem toolkit."
+        Evolutionary Computation, IEEE Transactions on 10.5 (2006): 477-506.
+
+
     This class defines the DTLZ5 multiobjective minimization problem
     taken from `(Deb et al., "Scalable Multi-Objective Optimization Test Problems."
     CEC 2002, pp. 825--830) <http://www.tik.ee.ethz.ch/sop/download/supplementary/testproblems/dtlz1/index.php>`__.
@@ -732,13 +742,25 @@ class DTLZ5(Benchmark):
     
     def global_optimum(self):
         """Return a globally optimal solution to this problem.
-        
+
         This function returns a globally optimal solution (i.e., a 
         solution that lives on the Pareto front). Since there are many
         solutions that are Pareto-optimal, this function randomly 
         chooses one to return.
+
+        .. warning::
+
+            For 4 or more objectives the Global Optimum Pareto set is not fully
+            defined by the this function.
+            Huband, Simon, et al.
+            "A review of multiobjective test problems and a scalable test problem toolkit."
+            Evolutionary Computation, IEEE Transactions on 10.5 (2006): 477-506.
         
         """
+        if self.objectives >= 4:
+            warnings.warn(
+                "Warning the DTLZ5 globally optimal pareto set is not fully defined for 4 or more objectives")
+
         x = [random.uniform(0, 1) for _ in range(self.objectives - 1)]
         x.extend([0.5 for _ in range(self.dimensions - self.objectives + 1)])
         return x
