@@ -580,7 +580,7 @@ class ES(EvolutionaryComputation):
     
     .. math::
     
-        \\sigma_i^\\prime = \\sigma_i + e^{\\tau \\cdot N(0, 1) + \\tau^\prime \\cdot N(0, 1)}
+        \\sigma_i^\\prime = \\sigma_i * e^{\\tau \\cdot N(0, 1) + \\tau^\prime \\cdot N(0, 1)}
         
         \\sigma_i^\\prime = max(\\sigma_i^\\prime, \\epsilon)
     
