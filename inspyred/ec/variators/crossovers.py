@@ -120,6 +120,7 @@ def n_point_crossover(random, mom, dad, args):
             if not normal:
                 bro[i] = m
                 sis[i] = d
+                normal = not normal
         children.append(bro)
         children.append(sis)
     else:
