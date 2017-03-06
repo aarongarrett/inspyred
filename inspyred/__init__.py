@@ -25,10 +25,11 @@
     .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 from inspyred import benchmarks
+from inspyred import cli
 from inspyred import ec
 from inspyred import swarm
 
-__all__ = ['benchmarks', 'ec', 'swarm']
+__all__ = ['benchmarks', 'cli', 'ec', 'swarm']
 __version__ = '1.0.1'
 __author__ = """Aaron Garrett"""
 __email__ = 'garrett@inspiredintelligence.io'
