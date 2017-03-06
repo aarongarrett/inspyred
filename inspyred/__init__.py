@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     This package allows the creation of bio-inspired computational intelligence algorithms.
     
@@ -21,13 +22,14 @@
        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
        THE SOFTWARE.       
         
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 from inspyred import benchmarks
 from inspyred import ec
 from inspyred import swarm
 
 __all__ = ['benchmarks', 'ec', 'swarm']
-__version__ = '1.0'
-__author__ = 'Aaron Garrett <aaron.lee.garrett@gmail.com>'
+__version__ = '1.0.1'
+__author__ = """Aaron Garrett"""
+__email__ = 'garrett@inspiredintelligence.io'
 __url__ = 'http://inspyred.github.com'

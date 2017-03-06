@@ -39,7 +39,7 @@
        THE SOFTWARE.       
         
     .. module:: observers
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import email
 import inspyred

@@ -32,7 +32,7 @@
        THE SOFTWARE.       
         
     .. module:: evaluators
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
     .. moduleauthor:: Jelle Feringa <jelleferinga@gmail.com>
 """
 import functools

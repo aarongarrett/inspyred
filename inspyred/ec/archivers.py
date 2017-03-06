@@ -41,7 +41,7 @@
        THE SOFTWARE.       
         
     .. module:: archivers
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import math
 

@@ -39,7 +39,7 @@
        THE SOFTWARE.       
         
     .. module:: migrators
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import multiprocessing
 try:

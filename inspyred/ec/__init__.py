@@ -25,7 +25,7 @@
        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
        THE SOFTWARE.       
         
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 from inspyred.ec.ec import Bounder
 from inspyred.ec.ec import DEA
@@ -38,17 +38,17 @@ from inspyred.ec.ec import EvolutionExit
 from inspyred.ec.ec import GA
 from inspyred.ec.ec import Individual
 from inspyred.ec.ec import SA
-import inspyred.ec.analysis
-import inspyred.ec.archivers
-import inspyred.ec.emo
-import inspyred.ec.evaluators
-import inspyred.ec.migrators
-import inspyred.ec.observers
-import inspyred.ec.replacers
-import inspyred.ec.selectors
-import inspyred.ec.terminators
-import inspyred.ec.utilities
-import inspyred.ec.variators
+from inspyred.ec import analysis
+from inspyred.ec import archivers
+from inspyred.ec import emo
+from inspyred.ec import evaluators
+from inspyred.ec import migrators
+from inspyred.ec import observers
+from inspyred.ec import replacers
+from inspyred.ec import selectors
+from inspyred.ec import terminators
+from inspyred.ec import utilities
+from inspyred.ec import variators
 
 __all__ = ['Bounder', 'DiscreteBounder', 'Individual', 'Error', 'EvolutionExit', 
            'EvolutionaryComputation', 'GA', 'ES', 'EDA', 'DEA', 'SA',

@@ -26,7 +26,7 @@
        THE SOFTWARE.       
         
     .. module:: ec
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import collections
 import copy

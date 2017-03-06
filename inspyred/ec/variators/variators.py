@@ -24,7 +24,7 @@
        THE SOFTWARE.       
         
     .. module:: variators
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 
 

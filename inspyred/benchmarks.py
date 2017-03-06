@@ -26,7 +26,7 @@
        THE SOFTWARE.       
     
     .. module:: benchmarks
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import warnings
 import copy

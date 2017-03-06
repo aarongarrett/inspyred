@@ -24,7 +24,7 @@
        THE SOFTWARE.       
         
     .. module:: mutators
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import copy
 import functools

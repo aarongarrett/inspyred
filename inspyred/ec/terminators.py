@@ -43,7 +43,7 @@
        THE SOFTWARE.       
         
     .. module:: terminators
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import itertools
 import math

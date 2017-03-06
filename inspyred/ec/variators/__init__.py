@@ -82,7 +82,7 @@
        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
        THE SOFTWARE.       
         
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 from inspyred.ec.variators.variators import default_variation
 from inspyred.ec.variators.crossovers import crossover

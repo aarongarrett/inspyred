@@ -27,7 +27,7 @@
        THE SOFTWARE.       
         
     .. module:: emo
-    .. moduleauthor:: Aaron Garrett <aaron.lee.garrett@gmail.com>
+    .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 from inspyred.ec import ec
 import math
