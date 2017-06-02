@@ -362,21 +362,21 @@ class EvolutionaryComputation(object):
         terminate = False
         fname = ''
         if isinstance(self.terminator, collections.Iterable):
-            for clause in self.terminator:
-                self.logger.debug('termination test using {0} at generation {1} and evaluation {2}'.format(clause.__name__, ng, ne))
-                terminate = terminate or clause(population=pop, num_generations=ng, num_evaluations=ne, args=self._kwargs)
-                if terminate:
-                    fname = clause.__name__
-                    break
+            terminators = self.terminator
         else:
-            self.logger.debug('termination test using {0} at generation {1} and evaluation {2}'.format(self.terminator.__name__, ng, ne))
-            terminate = self.terminator(population=pop, num_generations=ng, num_evaluations=ne, args=self._kwargs)
-            fname = self.terminator.__name__
+            terminators = [self.terminator]
+
+        for clause in self.terminators:
+            self.logger.debug('termination test using {0} at generation {1} and evaluation {2}'.format(clause.__name__, ng, ne))
+            terminate = terminate or clause(population=pop, num_generations=ng, num_evaluations=ne, args=self._kwargs)
+            if terminate:
+                fname = clause.__name__
+                break
+
         if terminate:
             self.termination_cause = fname
             self.logger.debug('termination from {0} at generation {1} and evaluation {2}'.format(self.termination_cause, ng, ne))
         return terminate
-        
     
     def evolve(self, generator, evaluator, pop_size=100, seeds=None, maximize=True, bounder=None, **args):
         """Perform the evolution.
@@ -454,30 +454,31 @@ class EvolutionaryComputation(object):
         self.archive = self.archiver(random=self._random, population=list(self.population), archive=list(self.archive), args=self._kwargs)
         self.logger.debug('archive size is now {0}'.format(len(self.archive)))
         self.logger.debug('population size is now {0}'.format(len(self.population)))
-                
+
+        # Turn observers and variators into lists if not already
         if isinstance(self.observer, collections.Iterable):
-            for obs in self.observer:
-                self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(obs.__name__, self.num_generations, self.num_evaluations))
-                obs(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
+            observers = self.observer
         else:
-            self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(self.observer.__name__, self.num_generations, self.num_evaluations))
-            self.observer(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
+            observers = [self.observer]
+        if isinstance(self.variator, collections.Iterable):
+            variators = self.variator
+        else:
+            variators = [self.variator]
+
+        for obs in observers:
+            self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(obs.__name__, self.num_generations, self.num_evaluations))
+            obs(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
         
         while not self._should_terminate(list(self.population), self.num_generations, self.num_evaluations):
             # Select individuals.
             self.logger.debug('selection using {0} at generation {1} and evaluation {2}'.format(self.selector.__name__, self.num_generations, self.num_evaluations))
             parents = self.selector(random=self._random, population=list(self.population), args=self._kwargs)
             self.logger.debug('selected {0} candidates'.format(len(parents)))
-            parent_cs = [copy.deepcopy(i.candidate) for i in parents]
-            offspring_cs = parent_cs
+            offspring_cs = [copy.deepcopy(i.candidate) for i in parents]
             
-            if isinstance(self.variator, collections.Iterable):
-                for op in self.variator:
-                    self.logger.debug('variation using {0} at generation {1} and evaluation {2}'.format(op.__name__, self.num_generations, self.num_evaluations))
-                    offspring_cs = op(random=self._random, candidates=offspring_cs, args=self._kwargs)
-            else:
-                self.logger.debug('variation using {0} at generation {1} and evaluation {2}'.format(self.variator.__name__, self.num_generations, self.num_evaluations))
-                offspring_cs = self.variator(random=self._random, candidates=offspring_cs, args=self._kwargs)
+            for op in variators:
+                self.logger.debug('variation using {0} at generation {1} and evaluation {2}'.format(op.__name__, self.num_generations, self.num_evaluations))
+                offspring_cs = op(random=self._random, candidates=offspring_cs, args=self._kwargs)
             self.logger.debug('created {0} offspring'.format(len(offspring_cs)))
             
             # Evaluate offspring.
@@ -510,15 +511,12 @@ class EvolutionaryComputation(object):
             self.logger.debug('population size is now {0}'.format(len(self.population)))
             
             self.num_generations += 1
-            if isinstance(self.observer, collections.Iterable):
-                for obs in self.observer:
-                    self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(obs.__name__, self.num_generations, self.num_evaluations))
-                    obs(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
-            else:
-                self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(self.observer.__name__, self.num_generations, self.num_evaluations))
-                self.observer(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
+            for obs in observers:
+                self.logger.debug('observation using {0} at generation {1} and evaluation {2}'.format(obs.__name__, self.num_generations, self.num_evaluations))
+                obs(population=list(self.population), num_generations=self.num_generations, num_evaluations=self.num_evaluations, args=self._kwargs)
+
         return self.population
-        
+
 
 class GA(EvolutionaryComputation):
     """Evolutionary computation representing a canonical genetic algorithm.
