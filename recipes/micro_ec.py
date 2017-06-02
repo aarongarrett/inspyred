@@ -52,12 +52,13 @@ class MicroEC(inspyred.ec.EvolutionaryComputation):
             
             self.num_generations += microec.num_generations
             if isinstance(self.observer, collections.Iterable):
-                for obs in self.observer:
-                    obs(population=list(self.population), num_generations=self.num_generations, 
-                        num_evaluations=self.num_evaluations, args=self._kwargs)
+                observers = self.observer
             else:
-                self.observer(population=list(self.population), num_generations=self.num_generations, 
-                              num_evaluations=self.num_evaluations, args=self._kwargs)
+                observers = [self.observer]
+            for obs in observers:
+                obs(population=list(self.population), num_generations=self.num_generations, 
+                    num_evaluations=self.num_evaluations, args=self._kwargs)
+
         return self.population
 
 
