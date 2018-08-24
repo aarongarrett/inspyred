@@ -83,6 +83,9 @@ Resources
   * Email: garrett@inspiredintelligence.io
   * Documentation: https://inspyred.readthedocs.io.
 
+Citing
+------
+Garrett, A. (2012). inspyred (Version 1.0.1) [software]. Inspired Intelligence. Retrieved from https://github.com/aarongarrett/inspyred [accessed CURRENT DATE].
 
 Features
 --------
