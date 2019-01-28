@@ -366,7 +366,7 @@ class EvolutionaryComputation(object):
         else:
             terminators = [self.terminator]
 
-        for clause in self.terminators:
+        for clause in terminators:
             self.logger.debug('termination test using {0} at generation {1} and evaluation {2}'.format(clause.__name__, ng, ne))
             terminate = terminate or clause(population=pop, num_generations=ng, num_evaluations=ne, args=self._kwargs)
             if terminate:
