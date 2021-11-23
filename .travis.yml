@@ -2,15 +2,22 @@
 # This file will be regenerated if you run travis_pypi_setup.py
 
 language: python
-python: 3.7
+python:
+  - "2.7"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.10"
+  - "pypy"
 
 env:
-  - TOXENV=py310
-  - TOXENV=py39
-  - TOXENV=py38
-  - TOXENV=py37
-  - TOXENV=py27
-  - TOXENV=pypy
+  matrix:
+    - TOXENV=py310
+    - TOXENV=py39
+    - TOXENV=py38
+    - TOXENV=py37
+    - TOXENV=py27
+    - TOXENV=pypy
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox
