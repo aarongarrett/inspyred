@@ -229,7 +229,7 @@ class ACS(inspyred.ec.EvolutionaryComputation):
     @variator.setter
     def variator(self, value):
         self._variator = [self._internal_variator]
-        if isinstance(value, collections.Sequence):
+        if isinstance(value, collections.abc.Sequence):
             self._variator.extend(value)
         else:
             self._variator.append(value)
