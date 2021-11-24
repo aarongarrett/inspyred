@@ -28,6 +28,9 @@ setup(
     url='https://github.com/aarongarrett/inspyred',
     packages=[
         'inspyred',
+        'inspyred.ec',
+        'inspyred.ec.variators',
+        'inspyred.swarm'
     ],
     package_dir={'inspyred':
                  'inspyred'},
