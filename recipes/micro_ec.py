@@ -51,7 +51,7 @@ class MicroEC(inspyred.ec.EvolutionaryComputation):
                                          population=list(self.population), args=self._kwargs)
             
             self.num_generations += microec.num_generations
-            if isinstance(self.observer, collections.Iterable):
+            if isinstance(self.observer, collections.abc.Iterable):
                 observers = self.observer
             else:
                 observers = [self.observer]
