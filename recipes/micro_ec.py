@@ -1,4 +1,8 @@
-import collections
+try:
+    from collections import Iterable
+except ImportError:
+    from collections.abc import Iterable
+
 import inspyred
 
 class MicroEC(inspyred.ec.EvolutionaryComputation):
@@ -51,7 +55,7 @@ class MicroEC(inspyred.ec.EvolutionaryComputation):
                                          population=list(self.population), args=self._kwargs)
             
             self.num_generations += microec.num_generations
-            if isinstance(self.observer, collections.abc.Iterable):
+            if isinstance(self.observer, Iterable):
                 observers = self.observer
             else:
                 observers = [self.observer]

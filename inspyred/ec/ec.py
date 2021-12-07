@@ -28,7 +28,11 @@
     .. module:: ec
     .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
-import collections
+try:
+    from collections import Iterable, Sequence
+except ImportError:
+    from collections.abc import Iterable, Sequence
+
 import copy
 import functools
 from inspyred.ec import archivers
@@ -117,9 +121,9 @@ class Bounder(object):
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
         if self.lower_bound is not None and self.upper_bound is not None:
-            if not isinstance(self.lower_bound, collections.abc.Iterable):
+            if not isinstance(self.lower_bound, Iterable):
                 self.lower_bound = itertools.repeat(self.lower_bound)
-            if not isinstance(self.upper_bound, collections.abc.Iterable):
+            if not isinstance(self.upper_bound, Iterable):
                 self.upper_bound = itertools.repeat(self.upper_bound)
 
     def __call__(self, candidate, args):
@@ -128,9 +132,9 @@ class Bounder(object):
         if self.lower_bound is None or self.upper_bound is None:
             return candidate
         else:
-            if not isinstance(self.lower_bound, collections.abc.Iterable):
+            if not isinstance(self.lower_bound, Iterable):
                 self.lower_bound = [self.lower_bound] * len(candidate)
-            if not isinstance(self.upper_bound, collections.abc.Iterable):
+            if not isinstance(self.upper_bound, Iterable):
                 self.upper_bound = [self.upper_bound] * len(candidate)
             bounded_candidate = candidate
             for i, (c, lo, hi) in enumerate(zip(candidate, self.lower_bound, 
@@ -166,9 +170,9 @@ class DiscreteBounder(object):
         self.upper_bound = itertools.repeat(max(self.values))
 
     def __call__(self, candidate, args):
-        if not isinstance(self.lower_bound, collections.abc.Iterable):
+        if not isinstance(self.lower_bound, Iterable):
             self.lower_bound = [min(self.values)] * len(candidate)
-        if not isinstance(self.upper_bound, collections.abc.Iterable):
+        if not isinstance(self.upper_bound, Iterable):
             self.upper_bound = [max(self.values)] * len(candidate)
         closest = lambda target: min(self.values, key=lambda x: abs(x-target))
         bounded_candidate = candidate
@@ -357,11 +361,11 @@ class EvolutionaryComputation(object):
             pass
         self._random = random
         self._kwargs = dict()
-        
+
     def _should_terminate(self, pop, ng, ne):
         terminate = False
         fname = ''
-        if isinstance(self.terminator, collections.abc.Iterable):
+        if isinstance(self.terminator, Iterable):
             terminators = self.terminator
         else:
             terminators = [self.terminator]
@@ -425,7 +429,7 @@ class EvolutionaryComputation(object):
         self.archive = []
         
         # Create the initial population.
-        if not isinstance(seeds, collections.abc.Sequence):
+        if not isinstance(seeds, Sequence):
             seeds = [seeds]
         initial_cs = copy.copy(seeds)
         num_generated = max(pop_size - len(seeds), 0)
@@ -456,11 +460,11 @@ class EvolutionaryComputation(object):
         self.logger.debug('population size is now {0}'.format(len(self.population)))
 
         # Turn observers and variators into lists if not already
-        if isinstance(self.observer, collections.abc.Iterable):
+        if isinstance(self.observer, Iterable):
             observers = self.observer
         else:
             observers = [self.observer]
-        if isinstance(self.variator, collections.abc.Iterable):
+        if isinstance(self.variator, Iterable):
             variators = self.variator
         else:
             variators = [self.variator]

@@ -28,7 +28,10 @@
     .. module:: swarm
     .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
-import collections
+try:
+    from collections import Sequence
+except ImportError:
+    from collections.abc import Sequence
 import copy
 import inspyred
 import math
@@ -229,7 +232,7 @@ class ACS(inspyred.ec.EvolutionaryComputation):
     @variator.setter
     def variator(self, value):
         self._variator = [self._internal_variator]
-        if isinstance(value, collections.abc.Sequence):
+        if isinstance(value, Sequence):
             self._variator.extend(value)
         else:
             self._variator.append(value)
