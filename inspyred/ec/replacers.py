@@ -185,7 +185,7 @@ def plus_replacement(random, population, parents, offspring, args):
 
     """
     pool = list(offspring)
-    pool.extend(parents)
+    pool.extend(population)
     pool.sort(reverse=True)
     survivors = pool[:len(population)]
     return survivors
