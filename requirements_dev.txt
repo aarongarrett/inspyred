@@ -5,7 +5,7 @@ watchdog
 flake8
 tox
 coverage
-Sphinx==1.4.8
+Sphinx
 cryptography
 PyYAML
 pytest
