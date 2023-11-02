@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     This package allows the creation of bio-inspired computational intelligence algorithms.
-    
+
     .. Copyright 2012 Aaron Garrett
 
     .. Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,17 +20,23 @@
        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-       THE SOFTWARE.       
-        
+       THE SOFTWARE.
+
     .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
+try:
+    import importlib.metadata
+    __version__ = importlib.metadata.version("inspyred")
+except ImportError:
+    import importlib_metadata
+    __version__ = importlib_metadata.version("inspyred")
+
 from inspyred import benchmarks
 from inspyred import cli
 from inspyred import ec
 from inspyred import swarm
 
 __all__ = ['benchmarks', 'cli', 'ec', 'swarm']
-__version__ = '1.0.1'
 __author__ = """Aaron Garrett"""
 __email__ = 'garrett@inspiredintelligence.io'
 __url__ = 'http://inspyred.github.com'
