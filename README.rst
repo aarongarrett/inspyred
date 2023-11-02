@@ -69,7 +69,7 @@ should be maximized::
 Requirements
 ------------
 
-  * Requires at least Python 2.6+ or 3+.
+  * Requires Python 3+.
   * Numpy and Pylab are required for several functions in ``ec.observers``.
   * Pylab and Matplotlib are required for several functions in ``ec.analysis``.
   * Parallel Python (pp) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.
