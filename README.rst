@@ -5,9 +5,11 @@
 
 .. image:: https://img.shields.io/pypi/v/inspyred.svg
         :target: https://pypi.python.org/pypi/inspyred
+        :alt: PyPi
 
 .. image:: https://github.com/aarongarrett/inspyred/actions/workflows/ci.yml/badge.svg
         :target: https://github.com/aarongarrett/inspyred/actions/workflows/ci.yml
+        :alt: GitHub Actions
 
 .. image:: https://readthedocs.org/projects/inspyred/badge/?version=latest
         :target: https://inspyred.readthedocs.io/en/latest/?badge=latest
@@ -15,13 +17,11 @@
 
 .. image:: https://img.shields.io/github/issues-pr/aarongarrett/inspyred
         :target: https://github.com/aarongarrett/inspyred/pulls
+        :alt: PRs
 
 .. image:: https://img.shields.io/github/issues/aarongarrett/inspyred
         :target: https://github.com/aarongarrett/inspyred/issues
-
-.. image:: https://pyup.io/repos/github/aarongarrett/inspyred/shield.svg
-     :target: https://pyup.io/repos/github/aarongarrett/inspyred/
-     :alt: Updates
+        :alt: Issues
 
 
 inspyred is a free, open source framework for creating biologically-inspired
@@ -69,7 +69,7 @@ should be maximized::
 Requirements
 ------------
 
-  * Requires at least Python 2.6+ or 3+.
+  * Requires Python 3+.
   * Numpy and Pylab are required for several functions in ``ec.observers``.
   * Pylab and Matplotlib are required for several functions in ``ec.analysis``.
   * Parallel Python (pp) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.

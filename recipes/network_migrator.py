@@ -3,9 +3,9 @@ import socket
 import pickle
 import threading
 import collections
-import SocketServer
+import socketserver
 
-class NetworkMigrator(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+class NetworkMigrator(socketserver.ThreadingMixIn, socketserver.TCPServer):
     """Defines a migration function across a network.
     
     This callable class acts as a migration function that 
@@ -45,7 +45,7 @@ class NetworkMigrator(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     """
     def __init__(self, server_address, client_addresses, max_migrants=1):
         self._lock = threading.Lock()
-        SocketServer.TCPServer.__init__(self, server_address, None)
+        socketserver.TCPServer.__init__(self, server_address, None)
         self.client_addresses = client_addresses
         self.migrants = collections.deque(maxlen=max_migrants)
         t = threading.Thread(target=self.serve_forever)
@@ -70,7 +70,7 @@ class NetworkMigrator(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
             wfile.close()
             rfile.close()        
         finally:
-            sys.exc_traceback = None
+            sys.exc_info()[2] = None
 
     def __call__(self, random, population, args):
         """Perform the migration.

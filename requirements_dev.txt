@@ -1,11 +1,8 @@
-pip
-bumpversion
 wheel
-watchdog
 flake8
 tox
 coverage
-Sphinx==1.4.8
-cryptography
-PyYAML
+Sphinx
 pytest
+matplotlib
+click

@@ -60,3 +60,7 @@ target/
 
 # pyenv python configuration file
 .python-version
+
+inspyred*csv
+
+.mypy_cache/

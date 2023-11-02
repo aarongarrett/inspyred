@@ -55,8 +55,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'inspyred'
-copyright = u"2017, Aaron Garrett"
+project = 'inspyred'
+copyright = "2017, Aaron Garrett"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -209,8 +209,8 @@ latex_elements = {
 # [howto/manual]).
 latex_documents = [
     ('index', 'inspyred.tex',
-     u'inspyred Documentation',
-     u'Aaron Garrett', 'manual'),
+     'inspyred Documentation',
+     'Aaron Garrett', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at
@@ -240,8 +240,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'inspyred',
-     u'inspyred Documentation',
-     [u'Aaron Garrett'], 1)
+     'inspyred Documentation',
+     ['Aaron Garrett'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -255,8 +255,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'inspyred',
-     u'inspyred Documentation',
-     u'Aaron Garrett',
+     'inspyred Documentation',
+     'Aaron Garrett',
      'inspyred',
      'A framework for creating bio-inspired computational intelligence algorithms in Python.',
      'Miscellaneous'),

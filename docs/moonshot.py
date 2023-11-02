@@ -29,7 +29,7 @@ def pairwise(iterable):
     """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
     a, b = itertools.tee(iterable)
     next(b, None)
-    return itertools.izip(a, b)
+    return zip(a, b)
     
 def distance_between(position_a, position_b):
     return math.sqrt((position_a[0] - position_b[0])**2 + (position_a[1] - position_b[1])**2)
@@ -147,7 +147,7 @@ def moonshot(orbital_height, satellite_mass, boost_velocity, initial_y_velocity,
         x = [p[0] for p in position] 
         y = [p[1] for p in position]
         cm = plt.get_cmap('gist_rainbow')
-        lines = plt.scatter(x, y, c=range(len(x)), cmap=cm, marker='o', s=2)
+        lines = plt.scatter(x, y, c=list(range(len(x))), cmap=cm, marker='o', s=2)
         plt.setp(lines, edgecolors='None')  
         plt.axis("equal")
         plt.grid("on")
