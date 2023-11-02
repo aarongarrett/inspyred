@@ -5,3 +5,4 @@ coverage
 Sphinx
 pytest
 matplotlib
+click
