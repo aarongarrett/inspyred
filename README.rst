@@ -5,9 +5,11 @@
 
 .. image:: https://img.shields.io/pypi/v/inspyred.svg
         :target: https://pypi.python.org/pypi/inspyred
+        :alt: PyPi
 
 .. image:: https://github.com/aarongarrett/inspyred/actions/workflows/ci.yml/badge.svg
         :target: https://github.com/aarongarrett/inspyred/actions/workflows/ci.yml
+        :alt: GitHub Actions
 
 .. image:: https://readthedocs.org/projects/inspyred/badge/?version=latest
         :target: https://inspyred.readthedocs.io/en/latest/?badge=latest
@@ -15,9 +17,11 @@
 
 .. image:: https://img.shields.io/github/issues-pr/aarongarrett/inspyred
         :target: https://github.com/aarongarrett/inspyred/pulls
+        :alt: PRs
 
 .. image:: https://img.shields.io/github/issues/aarongarrett/inspyred
         :target: https://github.com/aarongarrett/inspyred/issues
+        :alt: Issues
 
 
 inspyred is a free, open source framework for creating biologically-inspired
