@@ -19,8 +19,8 @@ class MetaEC(ec.EvolutionaryComputation):
         
     def _create_selector_replacer(self, random):
         pop_size = random.randint(1, 100)
-        selector = random.choice(range(0, 5))
-        replacer = random.choice(range(0, 8))
+        selector = random.choice(list(range(0, 5)))
+        replacer = random.choice(list(range(0, 8)))
         sel = [selector]
         if selector > 0:
             if replacer == 0 or replacer == 2 or replacer == 3:

@@ -3,7 +3,7 @@ from random import Random
 from time import time
 from time import sleep
 import inspyred
-from Tkinter import *
+from tkinter import *
 import itertools
 #end_imports
 
@@ -12,7 +12,7 @@ def area(p):
     return 0.5 * abs(sum([x0*y1 - x1*y0 for ((x0, y0), (x1, y1)) in segments(p)]))
 
 def segments(p):
-    return zip(p, p[1:] + [p[0]])
+    return list(zip(p, p[1:] + [p[0]]))
 
 def generate_polygon(random, args):
     size = args.get('num_vertices', 6)

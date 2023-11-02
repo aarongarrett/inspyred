@@ -31,11 +31,7 @@
 import functools
 import multiprocessing
 from collections import OrderedDict
-
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 
 class BoundedOrderedDict(OrderedDict):

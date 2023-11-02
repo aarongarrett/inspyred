@@ -161,7 +161,7 @@ def random_replacement(random, population, parents, offspring, args):
     num_elites = args.setdefault('num_elites', 0)
     population.sort(reverse=True)
     num_to_replace = min(len(offspring), len(population) - num_elites) 
-    valid_indices = range(num_elites, len(population))
+    valid_indices = list(range(num_elites, len(population)))
     rep_index = random.sample(valid_indices, num_to_replace)
     for i, repind in enumerate(rep_index):
         population[repind] = offspring[i]
