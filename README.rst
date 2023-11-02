@@ -19,10 +19,6 @@
 .. image:: https://img.shields.io/github/issues/aarongarrett/inspyred
         :target: https://github.com/aarongarrett/inspyred/issues
 
-.. image:: https://pyup.io/repos/github/aarongarrett/inspyred/shield.svg
-     :target: https://pyup.io/repos/github/aarongarrett/inspyred/
-     :alt: Updates
-
 
 inspyred is a free, open source framework for creating biologically-inspired
 computational intelligence algorithms in Python, including evolutionary
