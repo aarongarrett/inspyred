@@ -1,10 +1,7 @@
-bump-my-version
 wheel
-watchdog
 flake8
 tox
 coverage
 Sphinx
-cryptography
-PyYAML
 pytest
+matplotlib
