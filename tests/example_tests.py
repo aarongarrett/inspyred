@@ -61,10 +61,10 @@ class Niche_Test(unittest.TestCase):
     def test(self):
         ea = examples.advanced.niche_example.main(prng=prng)
         candidates = [p.candidate[0] for p in ea.population]
-        self.assertTrue(any(map(lambda x: 1 < x < 2, candidates)), 'expected a solution in [1, 2]')
-        self.assertTrue(any(map(lambda x: 7 < x < 8, candidates)), 'expected a solution in [7, 8]')
-        self.assertTrue(any(map(lambda x: 14 < x < 15, candidates)), 'expected a solution in [14, 15]')
-        self.assertTrue(any(map(lambda x: 20 < x < 21, candidates)), 'expected a solution in [20, 21]')
+        self.assertTrue(any([1 < x < 2 for x in candidates]), 'expected a solution in [1, 2]')
+        self.assertTrue(any([7 < x < 8 for x in candidates]), 'expected a solution in [7, 8]')
+        self.assertTrue(any([14 < x < 15 for x in candidates]), 'expected a solution in [14, 15]')
+        self.assertTrue(any([20 < x < 21 for x in candidates]), 'expected a solution in [20, 21]')
 
 class NSGA_Test(unittest.TestCase):
     def test(self):

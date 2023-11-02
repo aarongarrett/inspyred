@@ -12,7 +12,7 @@ import inspyred
 def my_variator(random, candidates, args):
     mutants = []
     for c in candidates:
-        points = random.sample(range(len(c)), 2)
+        points = random.sample(list(range(len(c))), 2)
         x, y = min(points), max(points)
         if x == 0:
             mutants.append(c[y::-1] + c[y+1:])

@@ -2,7 +2,7 @@
     =================
     :mod:`crossovers`
     =================
-    
+
     .. Copyright 2012 Aaron Garrett
 
     .. Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,18 +21,15 @@
        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-       THE SOFTWARE.       
-        
+       THE SOFTWARE.
+
     .. module:: crossovers
     .. moduleauthor:: Aaron Garrett <garrett@inspiredintelligence.io>
 """
 import copy
 import functools
 import math
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 
 def crossover(cross):
@@ -87,8 +84,8 @@ def crossover(cross):
 def n_point_crossover(random, mom, dad, args):
     """Return the offspring of n-point crossover on the candidates.
 
-    This function performs n-point crossover (NPX). It selects *n* 
-    random points without replacement at which to 'cut' the candidate 
+    This function performs n-point crossover (NPX). It selects *n*
+    random points without replacement at which to 'cut' the candidate
     solutions and recombine them.
 
     .. Arguments:
@@ -98,18 +95,18 @@ def n_point_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
     - *num_crossover_points* -- the number of crossover points used (default 1)
-    
+
     """
     crossover_rate = args.setdefault('crossover_rate', 1.0)
     num_crossover_points = args.setdefault('num_crossover_points', 1)
     children = []
     if random.random() < crossover_rate:
         num_cuts = min(len(mom)-1, num_crossover_points)
-        cut_points = random.sample(range(1, len(mom)), num_cuts)
+        cut_points = random.sample(list(range(1, len(mom))), num_cuts)
         cut_points.sort()
         bro = copy.copy(dad)
         sis = copy.copy(mom)
@@ -133,9 +130,9 @@ def n_point_crossover(random, mom, dad, args):
 def uniform_crossover(random, mom, dad, args):
     """Return the offspring of uniform crossover on the candidates.
 
-    This function performs uniform crossover (UX). For each element 
-    of the parents, a biased coin is flipped to determine whether 
-    the first offspring gets the 'mom' or the 'dad' element. An 
+    This function performs uniform crossover (UX). For each element
+    of the parents, a biased coin is flipped to determine whether
+    the first offspring gets the 'mom' or the 'dad' element. An
     optional keyword argument in args, ``ux_bias``, determines the bias.
 
     .. Arguments:
@@ -145,12 +142,12 @@ def uniform_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
-    - *ux_bias* -- the bias toward the first candidate in the crossover 
+    - *ux_bias* -- the bias toward the first candidate in the crossover
       (default 0.5)
-    
+
     """
     ux_bias = args.setdefault('ux_bias', 0.5)
     crossover_rate = args.setdefault('crossover_rate', 1.0)
@@ -186,15 +183,15 @@ def partially_matched_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
 
     """
     crossover_rate = args.setdefault('crossover_rate', 1.0)
     if random.random() < crossover_rate:
         size = len(mom)
-        points = random.sample(range(size), 2)
+        points = random.sample(list(range(size)), 2)
         x, y = min(points), max(points)
         bro = copy.copy(dad)
         bro[x:y+1] = mom[x:y+1]
@@ -216,7 +213,7 @@ def partially_matched_crossover(random, mom, dad, args):
 def arithmetic_crossover(random, mom, dad, args):
     """Return the offspring of arithmetic crossover on the candidates.
 
-    This function performs arithmetic crossover (AX), which is similar to a 
+    This function performs arithmetic crossover (AX), which is similar to a
     generalized weighted averaging of the candidate elements. The allele
     of each parent is weighted by the *ax_alpha* keyword argument, and
     the allele of the complement parent is weighted by 1 - *ax_alpha*.
@@ -224,7 +221,7 @@ def arithmetic_crossover(random, mom, dad, args):
     keyword argument. If this argument is ``None``, then all alleles
     are used. This means that if this function is used with all default
     values, then offspring are simple averages of their parents.
-    This function also makes use of the bounder function as specified 
+    This function also makes use of the bounder function as specified
     in the EC's ``evolve`` method.
 
     .. Arguments:
@@ -234,13 +231,13 @@ def arithmetic_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
     - *ax_alpha* -- the weight for the averaging (default 0.5)
     - *ax_points* -- a list of points specifying the alleles to
       recombine (default None)
-    
+
     """
     ax_alpha = args.setdefault('ax_alpha', 0.5)
     ax_points = args.setdefault('ax_points', None)
@@ -263,21 +260,21 @@ def arithmetic_crossover(random, mom, dad, args):
         children.append(mom)
         children.append(dad)
     return children
-    
-    
+
+
 @crossover
 def blend_crossover(random, mom, dad, args):
     """Return the offspring of blend crossover on the candidates.
 
-    This function performs blend crossover (BLX), which is similar to 
+    This function performs blend crossover (BLX), which is similar to
     arithmetic crossover with a bit of mutation. It creates offspring
     whose values are chosen randomly from a range bounded by the
     parent alleles but that is also extended by some amount proportional
     to the *blx_alpha* keyword argument. It is this extension of the
-    range that provides the additional exploration. This averaging is 
-    only done on the alleles listed in the *blx_points* keyword argument. 
-    If this argument is ``None``, then all alleles are used. This function 
-    also makes use of the bounder function as specified in the EC's 
+    range that provides the additional exploration. This averaging is
+    only done on the alleles listed in the *blx_points* keyword argument.
+    If this argument is ``None``, then all alleles are used. This function
+    also makes use of the bounder function as specified in the EC's
     ``evolve`` method.
 
     .. Arguments:
@@ -287,13 +284,13 @@ def blend_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
     - *blx_alpha* -- the blending rate (default 0.1)
     - *blx_points* -- a list of points specifying the alleles to
       recombine (default None)
-    
+
     """
     blx_alpha = args.setdefault('blx_alpha', 0.1)
     blx_points = args.setdefault('blx_points', None)
@@ -317,20 +314,20 @@ def blend_crossover(random, mom, dad, args):
     else:
         children.append(mom)
         children.append(dad)
-    return children    
-    
-    
+    return children
+
+
 def heuristic_crossover(random, candidates, args):
     """Return the offspring of heuristic crossover on the candidates.
 
-    It performs heuristic crossover (HX), which is similar to the 
-    update rule used in particle swarm optimization. This function 
-    also makes use of the bounder function as specified in the EC's 
+    It performs heuristic crossover (HX), which is similar to the
+    update rule used in particle swarm optimization. This function
+    also makes use of the bounder function as specified in the EC's
     ``evolve`` method.
 
     .. note::
-    
-       This function assumes that candidates can be pickled (for hashing 
+
+       This function assumes that candidates can be pickled (for hashing
        as keys to a dictionary).
 
     .. Arguments:
@@ -339,23 +336,23 @@ def heuristic_crossover(random, candidates, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
-    
+
     """
     crossover_rate = args.setdefault('crossover_rate', 1.0)
     bounder = args['_ec'].bounder
-        
+
     if len(candidates) % 2 == 1:
         candidates = candidates[:-1]
-        
-    # Since we don't have fitness information in the candidates, we need 
-    # to make a dictionary containing the candidate and its corresponding 
+
+    # Since we don't have fitness information in the candidates, we need
+    # to make a dictionary containing the candidate and its corresponding
     # individual in the population.
     population = list(args['_ec'].population)
-    lookup = dict(zip([pickle.dumps(p.candidate, 1) for p in population], population))
-    
+    lookup = dict(list(zip([pickle.dumps(p.candidate, 1) for p in population], population)))
+
     moms = candidates[::2]
     dads = candidates[1::2]
     children = []
@@ -377,16 +374,16 @@ def heuristic_crossover(random, candidates, args):
             children.append(mom)
             children.append(dad)
     return children
-    
+
 
 @crossover
 def simulated_binary_crossover(random, mom, dad, args):
     """Return the offspring of simulated binary crossover on the candidates.
-    
-    This function performs simulated binary crossover (SBX), following the 
-    implementation in NSGA-II 
+
+    This function performs simulated binary crossover (SBX), following the
+    implementation in NSGA-II
     `(Deb et al., ICANNGA 1999) <http://vision.ucsd.edu/~sagarwal/icannga.pdf>`_.
- 
+
     .. Arguments:
        random -- the random number generator object
        mom -- the first parent candidate
@@ -395,16 +392,16 @@ def simulated_binary_crossover(random, mom, dad, args):
 
     Optional keyword arguments in args:
 
-    - *crossover_rate* -- the rate at which crossover is performed 
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
-    - *sbx_distribution_index* -- the non-negative distribution index 
+    - *sbx_distribution_index* -- the non-negative distribution index
       (default 10)
-    
-    A small value of the `sbx_distribution_index` optional argument allows 
-    solutions far away from parents to be created as child solutions, 
+
+    A small value of the `sbx_distribution_index` optional argument allows
+    solutions far away from parents to be created as child solutions,
     while a large value restricts only near-parent solutions to be created as
     child solutions.
-    
+
     """
     crossover_rate = args.setdefault('crossover_rate', 1.0)
     if random.random() < crossover_rate:
@@ -418,13 +415,13 @@ def simulated_binary_crossover(random, mom, dad, args):
                     m, d = d, m
                 beta = 1.0 + 2 * min(m - lb, ub - d) / float(d - m)
                 alpha = 2.0 - 1.0 / beta**(di + 1.0)
-                u = random.random() 
+                u = random.random()
                 if u <= (1.0 / alpha):
                     beta_q = (u * alpha)**(1.0 / float(di + 1.0))
                 else:
                     beta_q = (1.0 / (2.0 - u * alpha))**(1.0 / float(di + 1.0))
                 bro_val = 0.5 * ((m + d) - beta_q * (d - m))
-                bro_val = max(min(bro_val, ub), lb)        
+                bro_val = max(min(bro_val, ub), lb)
                 sis_val = 0.5 * ((m + d) + beta_q * (d - m))
                 sis_val = max(min(sis_val, ub), lb)
                 if random.random() > 0.5:
@@ -443,14 +440,14 @@ def simulated_binary_crossover(random, mom, dad, args):
 @crossover
 def laplace_crossover(random, mom, dad, args):
     """Return the offspring of Laplace crossover on the candidates.
-    
-    This function performs Laplace crosssover (LX), following the 
-    implementation specified in (Deep and Thakur, "A new crossover 
-    operator for real coded genetic algorithms," Applied Mathematics 
+
+    This function performs Laplace crosssover (LX), following the
+    implementation specified in (Deep and Thakur, "A new crossover
+    operator for real coded genetic algorithms," Applied Mathematics
     and Computation, Volume 188, Issue 1, May 2007, pp. 895--911).
-    This function also makes use of the bounder function as specified 
-    in the EC's ``evolve`` method.    
- 
+    This function also makes use of the bounder function as specified
+    in the EC's ``evolve`` method.
+
     .. Arguments:
        random -- the random number generator object
        mom -- the first parent candidate
@@ -458,18 +455,18 @@ def laplace_crossover(random, mom, dad, args):
        args -- a dictionary of keyword arguments
 
     Optional keyword arguments in args:
-    
-    - *crossover_rate* -- the rate at which crossover is performed 
+
+    - *crossover_rate* -- the rate at which crossover is performed
       (default 1.0)
     - *lx_location* -- the location parameter (default 0)
     - *lx_scale* -- the scale parameter (default 0.5)
-    
-    In some sense, the *lx_location* and *lx_scale* parameters can be thought 
-    of as analogs in a Laplace distribution to the mean and standard 
-    deviation of a Gaussian distribution. If *lx_scale* is near zero, offspring 
-    will be produced near the parents. If *lx_scale* is farther from zero, 
+
+    In some sense, the *lx_location* and *lx_scale* parameters can be thought
+    of as analogs in a Laplace distribution to the mean and standard
+    deviation of a Gaussian distribution. If *lx_scale* is near zero, offspring
+    will be produced near the parents. If *lx_scale* is farther from zero,
     offspring will be produced far from the parents.
-    
+
     """
     crossover_rate = args.setdefault('crossover_rate', 1.0)
     if random.random() < crossover_rate:

@@ -133,7 +133,7 @@ class Binary(Benchmark):
 
     def _binary_to_real(self, binary):
         real = []
-        for d, lo, hi in zip(range(self.dimensions), self.benchmark.bounder.lower_bound, self.benchmark.bounder.upper_bound):
+        for d, lo, hi in zip(list(range(self.dimensions)), self.benchmark.bounder.lower_bound, self.benchmark.bounder.upper_bound):
             b = binary[d*self.dimension_bits:(d+1)*self.dimension_bits]
             real_val = float(int(''.join([str(i) for i in b]), 2))
             value = real_val / (2**(self.dimension_bits)-1) * (hi - lo) + lo
@@ -513,7 +513,7 @@ class DTLZ1(Benchmark):
         for c in candidates:
             gval = g(c[self.objectives-1:])
             fit = [0.5 * reduce(lambda x,y: x*y, c[:self.objectives-1]) * (1 + gval)]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 fit.append(0.5 * reduce(lambda x,y: x*y, c[:m-1], 1) * (1 - c[m-1]) * (1 + gval))
             fitness.append(emo.Pareto(fit))
         return fitness
@@ -573,7 +573,7 @@ class DTLZ2(Benchmark):
             gval = g(c[self.objectives-1:])
             fit = [(1 + gval) *
                    reduce(lambda x,y: x*y, [math.cos(a * math.pi / 2.0) for a in c[:self.objectives-1]])]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 fit.append((1 + gval) *
                            reduce(lambda x,y: x*y, [math.cos(a * math.pi / 2.0) for a in c[:m-1]], 1) *
                            math.sin(c[m-1] * math.pi / 2.0))
@@ -634,7 +634,7 @@ class DTLZ3(Benchmark):
         for c in candidates:
             gval = g(c[self.objectives-1:])
             fit = [(1 + gval) * reduce(lambda x,y: x*y, [math.cos(a * math.pi / 2.0) for a in c[:self.objectives-1]])]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 fit.append((1 + gval) *
                            reduce(lambda x,y: x*y, [math.cos(a * math.pi / 2.0) for a in c[:m-1]], 1) *
                            math.sin(c[m-1] * math.pi / 2.0))
@@ -697,7 +697,7 @@ class DTLZ4(Benchmark):
             gval = g(c[self.objectives-1:])
             fit = [(1 + gval) *
                    reduce(lambda x,y: x*y, [math.cos(a**self.alpha * math.pi / 2.0) for a in c[:self.objectives-1]])]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 fit.append((1 + gval) *
                            reduce(lambda x,y: x*y, [math.cos(a**self.alpha * math.pi / 2.0) for a in c[:m-1]], 1) *
                            math.sin(c[m-1]**self.alpha * math.pi / 2.0))
@@ -782,7 +782,7 @@ class DTLZ5(Benchmark):
             theta = lambda x: math.pi / (4.0 * (1 + gval)) * (1 + 2 * gval * x)
             fit = [(1 + gval) * math.cos(math.pi / 2.0 * c[0]) *
                    reduce(lambda x,y: x*y, [math.cos(theta(a)) for a in c[1:self.objectives-1]])]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 if m == 1:
                     fit.append((1 + gval) * math.sin(math.pi / 2.0 * c[0]))
                 else:
@@ -849,7 +849,7 @@ class DTLZ6(Benchmark):
             theta = lambda x: math.pi / (4.0 * (1 + gval)) * (1 + 2 * gval * x)
             fit = [(1 + gval) * math.cos(math.pi / 2.0 * c[0]) *
                    reduce(lambda x,y: x*y, [math.cos(theta(a)) for a in c[1:self.objectives-1]])]
-            for m in reversed(range(1, self.objectives)):
+            for m in reversed(list(range(1, self.objectives))):
                 if m == 1:
                     fit.append((1 + gval) * math.sin(math.pi / 2.0 * c[0]))
                 else:
@@ -972,7 +972,7 @@ class TSP(Benchmark):
     def __init__(self, weights):
         Benchmark.__init__(self, len(weights))
         self.weights = weights
-        self.components = [swarm.TrailComponent((i, j), value=(1 / weights[i][j])) for i, j in itertools.permutations(range(len(weights)), 2)]
+        self.components = [swarm.TrailComponent((i, j), value=(1 / weights[i][j])) for i, j in itertools.permutations(list(range(len(weights))), 2)]
         self.bias = 0.5
         self.bounder = ec.DiscreteBounder([i for i in range(len(weights))])
         self.maximize = True
