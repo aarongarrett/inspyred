@@ -14,7 +14,7 @@ To install inspyred, run this command in your terminal:
 
     $ pip install inspyred
 
-This is the preferred method to install inspyred, as it will always install the most recent stable release. 
+This is the preferred method to install inspyred, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -44,7 +44,7 @@ Once you have a copy of the source, you can install it with:
 
 .. code-block:: console
 
-    $ python setup.py install
+    $ pip install .
 
 
 .. _Github repo: https://github.com/aarongarrett/inspyred
