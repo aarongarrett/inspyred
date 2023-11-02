@@ -5,9 +5,9 @@ Credits
 Development Lead
 ----------------
 
-* Aaron Garrett <garrett@inspiredintelligence.io>
+* Aaron Garrett <garrett AT inspiredintelligence DOT io>
 
 Contributors
 ------------
 
-None yet. Why not be the first?
+See: https://github.com/aarongarrett/inspyred/graphs/contributors

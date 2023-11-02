@@ -2,7 +2,7 @@
 Tutorial
 ********
 
-This chapter presents three examples to which inspyred can be applied. 
+This chapter presents three examples to which inspyred can be applied.
 
 ======================
 The Rastrigin Function
@@ -27,15 +27,15 @@ The Generator
 .. literalinclude:: rastrigin.py
     :start-after: #start_imports
     :end-before: #end_imports
-    
+
 .. literalinclude:: rastrigin.py
     :pyobject: generate_rastrigin
 
-First, we import all the necessary libraries. ``random`` and ``time`` are needed for the random number generation; ``math`` is needed for the evaluation function; and ``inspyred`` is, of course, needed for the evolutionary computation.    
+First, we import all the necessary libraries. ``random`` and ``time`` are needed for the random number generation; ``math`` is needed for the evaluation function; and ``inspyred`` is, of course, needed for the evolutionary computation.
 
-This function must take the random number generator object along with the keyword arguments. Notice that we can use the ``args`` variable to pass anything we like to our functions. There is nothing special about the ``num_inputs`` key. But, as we'll see, we can pass in that value as a keyword argument to the ``evolve`` method of our evolution strategy. 
+This function must take the random number generator object along with the keyword arguments. Notice that we can use the ``args`` variable to pass anything we like to our functions. There is nothing special about the ``num_inputs`` key. But, as we'll see, we can pass in that value as a keyword argument to the ``evolve`` method of our evolution strategy.
 
-This code is pretty straightforward. We're simply generating a list of ``num_inputs`` uniform random values between -5.12 and 5.12. If ``num_inputs`` has not been specified, then we will default to generating 10 values. 
+This code is pretty straightforward. We're simply generating a list of ``num_inputs`` uniform random values between -5.12 and 5.12. If ``num_inputs`` has not been specified, then we will default to generating 10 values.
 
 And now we can tackle the evaluator...
 
@@ -53,7 +53,7 @@ This function takes an iterable object containing the candidates along with the 
 The Evolutionary Computation
 ----------------------------
 
-Now that we have decided upon our generator and evaluator, we can create the EC. In this case since our problem is real-coded, we'll choose a evolution strategy (ES) [#]_. The default for an ES is to select the entire population, use each to produce a child via Gaussian mutation, and then use "plus" replacement. 
+Now that we have decided upon our generator and evaluator, we can create the EC. In this case since our problem is real-coded, we'll choose a evolution strategy (ES) [#]_. The default for an ES is to select the entire population, use each to produce a child via Gaussian mutation, and then use "plus" replacement.
 
 .. literalinclude:: rastrigin.py
     :start-after: #start_main
@@ -94,7 +94,7 @@ The Generator
 .. literalinclude:: polyarea.py
     :start-after: #start_imports
     :end-before: #end_imports
-    
+
 .. literalinclude:: polyarea.py
     :pyobject: generate_polygon
 
@@ -125,7 +125,7 @@ The Bounder
 .. literalinclude:: polyarea.py
     :start-after: #start_bounder
     :end-before: #end_bounder
-    
+
 Because our representation is a bit non-standard (a list of tuples), we need to create a bounding function that the EC can use to bound potential candidate solutions. Here, the bounding function is simple enough. It just make sure that each element of each tuple lies in the range [-1, 1]. The ``lower_bound`` and ``upper_bound`` attributes are added to the function so that the ``mutate_polygon`` function can make use of them without being hard-coded. While this is not strictly necessary, it does mimic the behavior of the ``Bounder`` callable class provided by inspyred.
 
 ------------
@@ -148,7 +148,7 @@ For this task, we'll create a custom evolutionary computation by selecting the o
     :pyobject: mutate_polygon
 
 Notice that this is essentially a Gaussian mutation on each coordinate of each tuple. Now we can create our custom EC.
-    
+
 .. literalinclude:: polyarea.py
     :start-after: #start_main
     :end-before: #end_main
@@ -170,7 +170,7 @@ The Generator
 .. literalinclude:: moonshot.py
     :start-after: #start_imports
     :end-before: #end_imports
-    
+
 .. literalinclude:: moonshot.py
     :pyobject: satellite_generator
 
@@ -184,27 +184,27 @@ The Evaluator
     :pyobject: pairwise
 
 This function breaks a one-dimensional list into a set of overlapping pairs. This is necessary because the trajectory of the satellite is a set of points, and the total distance traveled is calculated by summing the pairwise distances.
-    
+
 .. literalinclude:: moonshot.py
     :pyobject: distance_between
 
 This function calculates the Euclidean distance between points.
-    
+
 .. literalinclude:: moonshot.py
     :pyobject: gravitational_force
 
-This function calculates the gravitational force between the two given bodies.  
-    
+This function calculates the gravitational force between the two given bodies.
+
 .. literalinclude:: moonshot.py
     :pyobject: force_on_satellite
-    
+
 This function calculates the force on the satellite from both the Earth and the Moon.
 
 .. literalinclude:: moonshot.py
     :pyobject: acceleration_of_satellite
 
 This function calculates the acceleration of the satellite due to the forces acting upon it.
-    
+
 .. literalinclude:: moonshot.py
     :pyobject: moonshot
 
@@ -218,7 +218,7 @@ The penalty/reward is 100000, and the fitness is designed to be minimized.
     :pyobject: moonshot_evaluator
 
 The evaluator simply calls the `moonshot` function.
-    
+
 ----------------------------
 The Evolutionary Computation
 ----------------------------
@@ -234,6 +234,6 @@ You can :download:`download the full example <moonshot.py>` to run it yourself.
    :width: 600
    :alt: Sample Results
    :align: center
-    
-.. [#] This example was suggested and implemented by Mike Vella (vellamike@gmail.com).
+
+.. [#] This example was suggested and implemented by Mike Vella (vellamike AT gmail DOT com).
 

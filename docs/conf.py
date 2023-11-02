@@ -56,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'inspyred'
-copyright = "2017, Aaron Garrett"
+copyright = "2023, Aaron Garrett"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
