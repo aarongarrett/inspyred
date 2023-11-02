@@ -39,9 +39,10 @@ jobs:
       run: |
           tox
 
-    - name: Run tests
+    - name: Run example tests
       run: |
           pip install -r ./requirements_dev.txt
+          pip install .
           # uses pp, which is not available for py3
           # python3 ./tests/evaluator_tests.py
           python3 ./tests/example_tests.py
