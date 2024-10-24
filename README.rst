@@ -72,7 +72,7 @@ Requirements
   * Requires Python 3+.
   * Numpy and Pylab are required for several functions in ``ec.observers``.
   * Pylab and Matplotlib are required for several functions in ``ec.analysis``.
-  * Parallel Python (pp) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.
+  * Parallel Python (ppft) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.
 
 
 License

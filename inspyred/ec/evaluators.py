@@ -117,7 +117,7 @@ def parallel_evaluation_pp(candidates, args):
     documentation for `Parallel Python <http://www.parallelpython.com>`_.
 
     """
-    import pp
+    import ppft as pp
     logger = args['_ec'].logger
 
     try:
