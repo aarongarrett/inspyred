@@ -70,10 +70,13 @@ Requirements
 ------------
 
   * Requires Python 3+.
-  * Numpy and Pylab are required for several functions in ``ec.observers``.
-  * Pylab and Matplotlib are required for several functions in ``ec.analysis``.
-  * Parallel Python (pp) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.
+  * Numpy and Matplotlib are required for several functions in ``ec.observers``.
+  * Matplotlib is required for several functions in ``ec.analysis``.
+  * Parallel Python (ppft) is required if ``ec.evaluators.parallel_evaluation_pp`` is used.
 
+You can use the `all` extra to install inspyred with all the extra dependencies::
+
+    pip install inspyred[all]
 
 License
 -------
